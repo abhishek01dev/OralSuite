@@ -1,0 +1,509 @@
+generator client {
+  provider        = "prisma-client-js"
+  output          = "../src/generated/prisma"
+  engineType      = "library"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────
+// Core Tables
+// ─────────────────────────────────────────
+
+model Tenant {
+  id        String       @id @default(uuid())
+  name      String       @db.VarChar(100)
+  slug      String       @unique @db.VarChar(50)
+  domain    String?      @db.VarChar(255)
+  plan      Plan         @default(free)
+  settings  Json?
+  status    TenantStatus @default(active)
+  createdAt DateTime     @default(now()) @map("created_at")
+  updatedAt DateTime     @updatedAt @map("updated_at")
+
+  users         User[]
+  roles         Role[]
+  roleUsers     RoleUser[]
+  permissionRoles PermissionRole[]
+  userPermissions UserPermission[]
+  departments   Department[]
+  teams         Team[]
+  teamUsers     TeamUser[]
+  featureFlags  FeatureFlag[]
+  subscriptions Subscription[]
+  patients      Patient[]
+  appointments  Appointment[]
+  treatments    TreatmentChart[]
+  invoices      Invoice[]
+  inventoryItems InventoryItem[]
+  passwordResetTokens PasswordResetToken[]
+
+  @@index([status])
+  @@index([plan])
+  @@map("tenants")
+}
+
+model User {
+  id              String     @id @default(uuid())
+  tenantId        String     @map("tenant_id")
+  email           String     @db.VarChar(255)
+  passwordHash    String     @map("password_hash") @db.VarChar(255)
+  firstName       String     @map("first_name") @db.VarChar(50)
+  lastName        String     @map("last_name") @db.VarChar(50)
+  avatarUrl       String?    @map("avatar_url") @db.VarChar(500)
+  status          UserStatus @default(active)
+  emailVerifiedAt DateTime?  @map("email_verified_at")
+  lastLoginAt     DateTime?  @map("last_login_at")
+  createdAt       DateTime   @default(now()) @map("created_at")
+  updatedAt       DateTime   @updatedAt @map("updated_at")
+
+  tenant          Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  roleUsers       RoleUser[]
+  userPermissions UserPermission[]
+  teamUsers       TeamUser[]
+  headOfDepartments Department[]   @relation("DepartmentHead")
+  leadOfTeams     Team[]           @relation("TeamLead")
+  assignedRoles   RoleUser[]       @relation("AssignedBy")
+  dentistAppointments Appointment[]  @relation("DentistAppointments")
+  dentistTreatments   TreatmentChart[] @relation("DentistTreatments")
+  passwordResetTokens PasswordResetToken[]
+  stockTransactions   StockTransaction[]
+
+  @@unique([tenantId, email])
+  @@index([tenantId, status])
+  @@index([tenantId])
+  @@index([email])
+  @@map("users")
+}
+
+model Role {
+  id          String   @id @default(uuid())
+  tenantId    String   @map("tenant_id")
+  name        String   @db.VarChar(50)
+  slug        String   @db.VarChar(50)
+  description String?  @db.VarChar(255)
+  isSystem    Boolean  @default(false) @map("is_system")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  tenant          Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  roleUsers       RoleUser[]
+  permissionRoles PermissionRole[]
+
+  @@unique([tenantId, slug])
+  @@index([tenantId])
+  @@map("roles")
+}
+
+model Permission {
+  id          String   @id @default(uuid())
+  name        String   @unique @db.VarChar(100)
+  description String?  @db.VarChar(255)
+  module      String   @db.VarChar(50)
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  permissionRoles PermissionRole[]
+  userPermissions UserPermission[]
+
+  @@index([module])
+  @@map("permissions")
+}
+
+model Module {
+  id          String   @id @default(uuid())
+  name        String   @db.VarChar(50)
+  slug        String   @unique @db.VarChar(50)
+  description String?  @db.VarChar(255)
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("modules")
+}
+
+// ─────────────────────────────────────────
+// Pivot Tables
+// ─────────────────────────────────────────
+
+model RoleUser {
+  id         String   @id @default(uuid())
+  userId     String   @map("user_id")
+  roleId     String   @map("role_id")
+  tenantId   String   @map("tenant_id")
+  assignedAt DateTime @default(now()) @map("assigned_at")
+  assignedBy String?  @map("assigned_by")
+
+  user       User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role       Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  tenant     Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  assigner   User?  @relation("AssignedBy", fields: [assignedBy], references: [id], onDelete: SetNull)
+
+  @@unique([userId, roleId, tenantId])
+  @@index([userId, tenantId])
+  @@index([roleId, tenantId])
+  @@index([tenantId])
+  @@map("role_user")
+}
+
+model PermissionRole {
+  id           String   @id @default(uuid())
+  roleId       String   @map("role_id")
+  permissionId String   @map("permission_id")
+  tenantId     String   @map("tenant_id")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  tenant     Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, permissionId, tenantId])
+  @@index([roleId, tenantId])
+  @@index([tenantId])
+  @@map("permission_role")
+}
+
+model UserPermission {
+  id           String              @id @default(uuid())
+  userId       String              @map("user_id")
+  permissionId String              @map("permission_id")
+  tenantId     String              @map("tenant_id")
+  type         PermissionOverride  @default(grant)
+  expiresAt    DateTime?           @map("expires_at")
+  createdAt    DateTime            @default(now()) @map("created_at")
+
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  tenant     Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, permissionId, tenantId])
+  @@index([userId, tenantId])
+  @@index([tenantId])
+  @@map("user_permissions")
+}
+
+// ─────────────────────────────────────────
+// Advanced Tables
+// ─────────────────────────────────────────
+
+model Department {
+  id         String   @id @default(uuid())
+  tenantId   String   @map("tenant_id")
+  name       String   @db.VarChar(100)
+  parentId   String?  @map("parent_id")
+  headUserId String?  @map("head_user_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  tenant   Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  parent   Department? @relation("DepartmentHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children Department[] @relation("DepartmentHierarchy")
+  head     User?       @relation("DepartmentHead", fields: [headUserId], references: [id], onDelete: SetNull)
+  teams    Team[]
+
+  @@index([tenantId])
+  @@index([tenantId, parentId])
+  @@map("departments")
+}
+
+model Team {
+  id           String   @id @default(uuid())
+  tenantId     String   @map("tenant_id")
+  departmentId String   @map("department_id")
+  name         String   @db.VarChar(100)
+  leadUserId   String?  @map("lead_user_id")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  tenant     Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  department Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  lead       User?      @relation("TeamLead", fields: [leadUserId], references: [id], onDelete: SetNull)
+  teamUsers  TeamUser[]
+
+  @@index([tenantId])
+  @@index([tenantId, departmentId])
+  @@map("teams")
+}
+
+model TeamUser {
+  id       String   @id @default(uuid())
+  userId   String   @map("user_id")
+  teamId   String   @map("team_id")
+  tenantId String   @map("tenant_id")
+  joinedAt DateTime @default(now()) @map("joined_at")
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, teamId, tenantId])
+  @@index([tenantId])
+  @@map("team_user")
+}
+
+model FeatureFlag {
+  id        String   @id @default(uuid())
+  tenantId  String?  @map("tenant_id")
+  name      String   @db.VarChar(100)
+  slug      String   @db.VarChar(50)
+  isEnabled Boolean  @default(false) @map("is_enabled")
+  conditions Json?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  tenant Tenant? @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, slug])
+  @@index([tenantId])
+  @@index([slug])
+  @@map("feature_flags")
+}
+
+model Subscription {
+  id        String             @id @default(uuid())
+  tenantId  String             @map("tenant_id")
+  plan      Plan
+  status    SubscriptionStatus @default(active)
+  startedAt DateTime           @default(now()) @map("started_at")
+  expiresAt DateTime?          @map("expires_at")
+  metadata  Json?
+  createdAt DateTime           @default(now()) @map("created_at")
+  updatedAt DateTime           @updatedAt @map("updated_at")
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([tenantId, status])
+  @@map("subscriptions")
+}
+
+// ─────────────────────────────────────────
+// Enums
+// ─────────────────────────────────────────
+
+enum TenantStatus {
+  active
+  suspended
+  pending
+}
+
+enum UserStatus {
+  active
+  inactive
+  suspended
+}
+
+enum Plan {
+  free
+  starter
+  professional
+  enterprise
+}
+
+enum PermissionOverride {
+  grant
+  deny
+}
+
+enum SubscriptionStatus {
+  active
+  cancelled
+  expired
+  trial
+}
+
+// ─────────────────────────────────────────
+// Clinical & Operational Tables (Phase 1 Expansion)
+// ─────────────────────────────────────────
+
+// --- Patient Management ---
+
+model Patient {
+  id          String   @id @default(uuid())
+  tenantId    String   @map("tenant_id")
+  firstName   String   @map("first_name") @db.VarChar(50)
+  lastName    String   @map("last_name") @db.VarChar(50)
+  dateOfBirth DateTime? @map("date_of_birth") @db.Date
+  gender      String?  @db.VarChar(20)
+  email       String?  @db.VarChar(255)
+  phone       String?  @db.VarChar(50)
+  address     String?  @db.Text
+  bloodGroup  String?  @map("blood_group") @db.VarChar(10)
+  notes       String?  @db.Text
+  status      String   @default("active") @db.VarChar(20)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  appointments Appointment[]
+  treatments  TreatmentChart[]
+  invoices    Invoice[]
+
+  @@index([tenantId])
+  @@index([tenantId, status])
+  @@map("patients")
+}
+
+// --- Scheduling ---
+
+model Appointment {
+  id          String   @id @default(uuid())
+  tenantId    String   @map("tenant_id")
+  patientId   String   @map("patient_id")
+  dentistId   String   @map("dentist_id")
+  type        String   @db.VarChar(50) // e.g., Consultation, Surgery, Cleaning
+  status      String   @default("scheduled") @db.VarChar(20) // scheduled, completed, cancelled, no_show
+  startTime   DateTime @map("start_time")
+  endTime     DateTime @map("end_time")
+  notes       String?  @db.Text
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  patient     Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  dentist     User     @relation("DentistAppointments", fields: [dentistId], references: [id], onDelete: Restrict)
+
+  @@index([tenantId])
+  @@index([tenantId, dentistId, startTime])
+  @@index([tenantId, patientId])
+  @@map("appointments")
+}
+
+// --- Clinical Charting ---
+
+model TreatmentChart {
+  id          String   @id @default(uuid())
+  tenantId    String   @map("tenant_id")
+  patientId   String   @map("patient_id")
+  dentistId   String   @map("dentist_id")
+  toothNumber String?  @map("tooth_number") @db.VarChar(10)
+  procedure   String   @db.VarChar(255)
+  description String?  @db.Text
+  status      String   @default("planned") @db.VarChar(20) // planned, completed
+  cost        Decimal? @db.Decimal(10, 2)
+  performedAt DateTime? @map("performed_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  patient     Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  dentist     User     @relation("DentistTreatments", fields: [dentistId], references: [id], onDelete: Restrict)
+
+  @@index([tenantId, patientId])
+  @@map("treatment_charts")
+}
+
+// --- Billing ---
+
+model Invoice {
+  id          String   @id @default(uuid())
+  tenantId    String   @map("tenant_id")
+  patientId   String   @map("patient_id")
+  invoiceNo   String   @map("invoice_no") @db.VarChar(50)
+  status      String   @default("pending") @db.VarChar(20) // pending, paid, overdue, cancelled
+  subtotal    Decimal  @db.Decimal(10, 2)
+  tax         Decimal  @default(0) @db.Decimal(10, 2)
+  discount    Decimal  @default(0) @db.Decimal(10, 2)
+  total       Decimal  @db.Decimal(10, 2)
+  amountPaid  Decimal  @default(0) @map("amount_paid") @db.Decimal(10, 2)
+  dueDate     DateTime @map("due_date") @db.Date
+  issuedAt    DateTime @default(now()) @map("issued_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  patient     Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  lineItems   InvoiceLineItem[]
+  payments    Payment[]
+
+  @@unique([tenantId, invoiceNo])
+  @@index([tenantId, patientId])
+  @@index([tenantId, status])
+  @@map("invoices")
+}
+
+model InvoiceLineItem {
+  id          String   @id @default(uuid())
+  invoiceId   String   @map("invoice_id")
+  description String   @db.VarChar(255)
+  quantity    Int      @default(1)
+  unitPrice   Decimal  @map("unit_price") @db.Decimal(10, 2)
+  total       Decimal  @db.Decimal(10, 2)
+
+  invoice     Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@index([invoiceId])
+  @@map("invoice_line_items")
+}
+
+model Payment {
+  id          String   @id @default(uuid())
+  invoiceId   String   @map("invoice_id")
+  amount      Decimal  @db.Decimal(10, 2)
+  method      String   @db.VarChar(50) // cash, card, transfer, insurance
+  reference   String?  @db.VarChar(100)
+  paymentDate DateTime @default(now()) @map("payment_date")
+  notes       String?  @db.Text
+
+  invoice     Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@index([invoiceId])
+  @@map("payments")
+}
+
+// --- Inventory ---
+
+model InventoryItem {
+  id          String   @id @default(uuid())
+  tenantId    String   @map("tenant_id")
+  name        String   @db.VarChar(100)
+  sku         String   @unique @db.VarChar(50)
+  category    String   @db.VarChar(50)
+  unit        String   @db.VarChar(20) // pcs, box, bottle
+  quantity    Int      @default(0)
+  minQuantity Int      @default(10) @map("min_quantity")
+  costPrice   Decimal? @map("cost_price") @db.Decimal(10, 2)
+  supplier    String?  @db.VarChar(100)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  transactions StockTransaction[]
+
+  @@index([tenantId])
+  @@index([tenantId, category])
+  @@map("inventory_items")
+}
+
+model StockTransaction {
+  id          String   @id @default(uuid())
+  itemId      String   @map("item_id")
+  type        String   @db.VarChar(10) // in, out
+  quantity    Int
+  reason      String?  @db.VarChar(255)
+  performedBy String   @map("performed_by")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  item        InventoryItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  user        User          @relation(fields: [performedBy], references: [id], onDelete: Restrict)
+
+  @@index([itemId])
+  @@map("stock_transactions")
+}
+
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  tenantId  String   @map("tenant_id")
+  token     String   @unique @db.VarChar(255)
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+  @@map("password_reset_tokens")
+}

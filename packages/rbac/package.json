@@ -1,0 +1,18 @@
+{
+  "name": "@repo/rbac",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rimraf dist",
+    "lint": "eslint src/"
+  },
+  "dependencies": {
+    "@repo/shared": "workspace:*",
+    "@repo/cache": "workspace:*",
+    "@repo/db-mysql": "workspace:*"
+  }
+}
