@@ -13,6 +13,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { label: 'Dashboard', href: '/dashboard', icon: 'dashboard' },
+  { label: 'Demo Requests', href: '/dashboard/demo-requests', icon: 'forward_to_inbox' },
   { label: 'Tenants', href: '/dashboard/tenants', icon: 'corporate_fare' },
   { label: 'Patients', href: '/dashboard/patients', icon: 'person' },
   { label: 'Appointments', href: '/dashboard/appointments', icon: 'calendar_month' },
