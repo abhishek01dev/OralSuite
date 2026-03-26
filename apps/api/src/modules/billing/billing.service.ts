@@ -111,7 +111,7 @@ export class BillingService {
   }
 
   async updateInvoice(tenantId: string, id: string, data: UpdateInvoiceDto) {
-    const updateData: any = { ...data };
+    const updateData: Record<string, unknown> = { ...data };
     if (data.dueDate) updateData.dueDate = new Date(data.dueDate);
 
     // Simplification for this implementation plan: we don't update line items

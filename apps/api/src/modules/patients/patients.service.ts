@@ -21,7 +21,7 @@ export class PatientsService {
     }
 
     const items = await prisma.patient.findMany(findManyArgs);
-    
+
     let nextCursor: string | undefined = undefined;
     if (items.length > limit) {
       const nextItem = items.pop();
@@ -46,17 +46,17 @@ export class PatientsService {
       include: {
         appointments: {
           orderBy: { startTime: 'desc' },
-          take: 5
+          take: 5,
         },
         treatments: {
           orderBy: { createdAt: 'desc' },
-          take: 5
+          take: 5,
         },
         invoices: {
           orderBy: { dueDate: 'desc' },
-          take: 5
-        }
-      }
+          take: 5,
+        },
+      },
     });
   }
 
@@ -71,11 +71,11 @@ export class PatientsService {
   }
 
   async update(tenantId: string, id: string, data: UpdatePatientDto) {
-    const updateData: any = { ...data };
+    const updateData: Record<string, unknown> = { ...data };
     if (data.dateOfBirth) {
       updateData.dateOfBirth = new Date(data.dateOfBirth);
     }
-    
+
     return prisma.patient.update({
       where: {
         id,

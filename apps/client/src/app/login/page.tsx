@@ -22,7 +22,7 @@ export default function ClientLogin() {
     try {
       await login(email, password);
       router.push('/dashboard');
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Login failed:', err);
       if (err instanceof ApiError) {
         if (err.code === 'INVALID_CREDENTIALS') {
@@ -31,7 +31,9 @@ export default function ClientLogin() {
           setError(err.message);
         }
       } else {
-        setError(err.message || 'Connection failed. Please check your network.');
+        setError(
+          err instanceof Error ? err.message : 'Connection failed. Please check your network.',
+        );
       }
     } finally {
       setIsLoading(false);

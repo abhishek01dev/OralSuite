@@ -20,9 +20,9 @@ interface BillingState {
   invoices: Invoice[];
   isLoading: boolean;
   error: string | null;
-  fetchInvoices: (params?: any) => Promise<void>;
-  createInvoice: (data: any) => Promise<Invoice>;
-  updateInvoice: (id: string, data: any) => Promise<Invoice>;
+  fetchInvoices: (params?: Record<string, string>) => Promise<void>;
+  createInvoice: (data: Partial<Invoice>) => Promise<Invoice>;
+  updateInvoice: (id: string, data: Partial<Invoice>) => Promise<Invoice>;
 }
 
 export const useBillingStore = create<BillingState>((set) => ({
@@ -35,27 +35,33 @@ export const useBillingStore = create<BillingState>((set) => ({
     try {
       const res = await api.get<{ data: Invoice[] }>('/billing/invoices', params);
       set({ invoices: res.data, isLoading: false });
-    } catch (err: any) {
-      set({ error: err.message, isLoading: false });
+    } catch (err: unknown) {
+      set({
+        error: err instanceof Error ? err.message : 'Failed to fetch invoices',
+        isLoading: false,
+      });
     }
   },
 
-  createInvoice: async (data: any) => {
+  createInvoice: async (data: Partial<Invoice>) => {
     set({ isLoading: true, error: null });
     try {
       const res = await api.post<{ data: Invoice }>('/billing/invoices', data);
-      set((state) => ({ 
+      set((state) => ({
         invoices: [res.data, ...state.invoices],
-        isLoading: false 
+        isLoading: false,
       }));
       return res.data;
-    } catch (err: any) {
-      set({ error: err.message, isLoading: false });
+    } catch (err: unknown) {
+      set({
+        error: err instanceof Error ? err.message : 'Failed to create invoice',
+        isLoading: false,
+      });
       throw err;
     }
   },
 
-  updateInvoice: async (id: string, data: any) => {
+  updateInvoice: async (id: string, data: Partial<Invoice>) => {
     set({ isLoading: true, error: null });
     try {
       const res = await api.patch<{ data: Invoice }>(`/billing/invoices/${id}`, data);
@@ -64,8 +70,11 @@ export const useBillingStore = create<BillingState>((set) => ({
         isLoading: false,
       }));
       return res.data;
-    } catch (err: any) {
-      set({ error: err.message, isLoading: false });
+    } catch (err: unknown) {
+      set({
+        error: err instanceof Error ? err.message : 'Failed to update invoice',
+        isLoading: false,
+      });
       throw err;
     }
   },

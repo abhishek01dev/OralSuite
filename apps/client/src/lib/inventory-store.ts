@@ -17,7 +17,7 @@ interface InventoryState {
   items: InventoryItem[];
   isLoading: boolean;
   error: string | null;
-  fetchItems: (params?: any) => Promise<void>;
+  fetchItems: (params?: Record<string, string>) => Promise<void>;
   updateStock: (itemId: string, quantity: number, type: string) => Promise<void>;
 }
 
@@ -31,8 +31,11 @@ export const useInventoryStore = create<InventoryState>((set) => ({
     try {
       const res = await api.get<{ data: InventoryItem[] }>('/inventory', params);
       set({ items: res.data, isLoading: false });
-    } catch (err: any) {
-      set({ error: err.message, isLoading: false });
+    } catch (err: unknown) {
+      set({
+        error: err instanceof Error ? err.message : 'Failed to fetch inventory',
+        isLoading: false,
+      });
     }
   },
 
@@ -43,8 +46,11 @@ export const useInventoryStore = create<InventoryState>((set) => ({
       // Re-fetch to get updated numbers
       const res = await api.get<{ data: InventoryItem[] }>('/inventory');
       set({ items: res.data, isLoading: false });
-    } catch (err: any) {
-      set({ error: err.message, isLoading: false });
+    } catch (err: unknown) {
+      set({
+        error: err instanceof Error ? err.message : 'Failed to update stock',
+        isLoading: false,
+      });
       throw err;
     }
   },

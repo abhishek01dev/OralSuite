@@ -27,9 +27,9 @@ interface AppointmentsState {
   appointments: Appointment[];
   isLoading: boolean;
   error: string | null;
-  fetchAppointments: (params?: any) => Promise<void>;
-  createAppointment: (data: any) => Promise<Appointment>;
-  updateAppointment: (id: string, data: any) => Promise<Appointment>;
+  fetchAppointments: (params?: Record<string, string>) => Promise<void>;
+  createAppointment: (data: Partial<Appointment>) => Promise<Appointment>;
+  updateAppointment: (id: string, data: Partial<Appointment>) => Promise<Appointment>;
   deleteAppointment: (id: string) => Promise<void>;
 }
 
@@ -43,29 +43,35 @@ export const useAppointmentsStore = create<AppointmentsState>((set) => ({
     try {
       const res = await api.get<{ data: Appointment[] }>('/appointments', params);
       set({ appointments: res.data, isLoading: false });
-    } catch (err: any) {
-      set({ error: err.message, isLoading: false });
+    } catch (err: unknown) {
+      set({
+        error: err instanceof Error ? err.message : 'Failed to fetch appointments',
+        isLoading: false,
+      });
     }
   },
 
-  createAppointment: async (data: any) => {
+  createAppointment: async (data: Partial<Appointment>) => {
     set({ isLoading: true, error: null });
     try {
       const res = await api.post<{ data: Appointment }>('/appointments', data);
-      set((state) => ({ 
-        appointments: [...state.appointments, res.data].sort((a, b) => 
-          new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
+      set((state) => ({
+        appointments: [...state.appointments, res.data].sort(
+          (a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime(),
         ),
-        isLoading: false 
+        isLoading: false,
       }));
       return res.data;
-    } catch (err: any) {
-      set({ error: err.message, isLoading: false });
+    } catch (err: unknown) {
+      set({
+        error: err instanceof Error ? err.message : 'Failed to create appointment',
+        isLoading: false,
+      });
       throw err;
     }
   },
 
-  updateAppointment: async (id: string, data: any) => {
+  updateAppointment: async (id: string, data: Partial<Appointment>) => {
     set({ isLoading: true, error: null });
     try {
       const res = await api.patch<{ data: Appointment }>(`/appointments/${id}`, data);
@@ -74,8 +80,11 @@ export const useAppointmentsStore = create<AppointmentsState>((set) => ({
         isLoading: false,
       }));
       return res.data;
-    } catch (err: any) {
-      set({ error: err.message, isLoading: false });
+    } catch (err: unknown) {
+      set({
+        error: err instanceof Error ? err.message : 'Failed to update appointment',
+        isLoading: false,
+      });
       throw err;
     }
   },
@@ -88,8 +97,11 @@ export const useAppointmentsStore = create<AppointmentsState>((set) => ({
         appointments: state.appointments.filter((a) => a.id !== id),
         isLoading: false,
       }));
-    } catch (err: any) {
-      set({ error: err.message, isLoading: false });
+    } catch (err: unknown) {
+      set({
+        error: err instanceof Error ? err.message : 'Failed to delete appointment',
+        isLoading: false,
+      });
       throw err;
     }
   },

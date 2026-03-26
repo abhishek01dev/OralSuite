@@ -4,59 +4,19 @@ import { AnimatedHero } from '@/components/landing/AnimatedHero';
 import { FeatureShowcase } from '@/components/landing/FeatureShowcase';
 import { TrustBadgeMarquee } from '@/components/landing/TrustBadgeMarquee';
 import { PricingSection } from '@/components/landing/PricingSection';
+import { LandingNavbar } from '@/components/landing/LandingNavbar';
+import { LandingFooter } from '@/components/landing/LandingFooter';
 
 export default function LandingPage() {
   return (
     <div className="bg-surface font-body selection:bg-primary-fixed-dim text-on-surface w-full overflow-x-hidden flex flex-col min-h-screen">
-      <nav className="fixed w-full z-50 transition-all duration-300 bg-surface/80 backdrop-blur-md border-b border-outline-variant/20 py-4 px-6 md:px-12">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-on-primary">
-              <span className="material-symbols-outlined">dentistry</span>
-            </div>
-            <div>
-              <h1 className="text-xl font-bold font-headline text-on-surface">DentFlow</h1>
-              <p className="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold leading-none mt-0.5">
-                Clinical OS
-              </p>
-            </div>
-          </div>
-          <div className="hidden md:flex items-center gap-8 font-manrope font-semibold text-sm">
-            <a className="text-on-surface-variant hover:text-primary transition-colors" href="#">
-              Platform
-            </a>
-            <a className="text-on-surface-variant hover:text-primary transition-colors" href="#">
-              Solutions
-            </a>
-            <a className="text-on-surface-variant hover:text-primary transition-colors" href="#">
-              Pricing
-            </a>
-            <a className="text-on-surface-variant hover:text-primary transition-colors" href="#">
-              Resources
-            </a>
-          </div>
-          <div className="flex items-center gap-4">
-            <Link
-              className="hidden md:block text-on-surface-variant hover:text-primary font-manrope font-bold text-sm transition-colors"
-              href="/login"
-            >
-              Sign In
-            </Link>
-            <Link
-              className="bg-primary text-on-primary px-6 py-2.5 rounded-xl font-headline font-bold text-sm hover:shadow-lg hover:shadow-primary/20 transition-all active:scale-95"
-              href="/login"
-            >
-              Book Demo
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <LandingNavbar />
 
       <main className="pt-24 flex-grow">
         <AnimatedHero />
 
-        {/* Value Proposition snippet kept for flow, or we can move it inside FeatureShowcase. Let's keep it here but simplified and animated. */}
-        <section className="py-24 px-6 bg-surface-container-low">
+        {/* Value Proposition snippet */}
+        <section id="platform" className="py-24 px-6 bg-surface-container-low">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-3xl lg:text-5xl font-extrabold font-headline text-on-surface mb-4">
@@ -105,9 +65,15 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <FeatureShowcase />
-        <TrustBadgeMarquee />
-        <PricingSection />
+        <div id="features">
+          <FeatureShowcase />
+        </div>
+        <div id="trust">
+          <TrustBadgeMarquee />
+        </div>
+        <div id="pricing">
+          <PricingSection />
+        </div>
 
         {/* FAQ Section */}
         <section className="py-24 px-6 bg-surface-container-lowest">
@@ -199,9 +165,12 @@ export default function LandingPage() {
               >
                 Start 14-Day Free Trial
               </Link>
-              <button className="px-10 py-5 rounded-2xl font-headline font-bold text-xl text-on-surface border border-outline-variant hover:bg-surface-container-low transition-all">
+              <Link
+                href="/login"
+                className="px-10 py-5 rounded-2xl font-headline font-bold text-xl text-on-surface border border-outline-variant hover:bg-surface-container-low transition-all text-center"
+              >
                 Book a Demo
-              </button>
+              </Link>
             </div>
             <div className="pt-8">
               <p className="text-sm font-medium text-on-surface-variant flex items-center justify-center gap-2">
@@ -218,112 +187,7 @@ export default function LandingPage() {
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="w-full py-12 px-6 mt-auto bg-slate-50 dark:bg-slate-900 border-t border-slate-200/50 dark:border-slate-800/50">
-        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
-          <div className="col-span-2 md:col-span-1">
-            <div className="text-xl font-bold font-headline text-blue-900 dark:text-blue-100 mb-4">
-              DentFlow
-            </div>
-            <p className="text-slate-500 text-xs font-medium leading-relaxed max-w-[200px]">
-              © 2024 DentFlow AI. Precision in every practice.
-            </p>
-          </div>
-          <div>
-            <h4 className="font-headline font-bold text-blue-900 dark:text-blue-100 text-sm mb-4">
-              Product
-            </h4>
-            <ul className="space-y-3">
-              <li>
-                <a
-                  className="font-body text-xs font-medium text-slate-500 hover:underline decoration-blue-500/30 transition-colors"
-                  href="#"
-                >
-                  Features
-                </a>
-              </li>
-              <li>
-                <a
-                  className="font-body text-xs font-medium text-slate-500 hover:underline decoration-blue-500/30 transition-colors"
-                  href="#"
-                >
-                  Pricing
-                </a>
-              </li>
-              <li>
-                <a
-                  className="font-body text-xs font-medium text-slate-500 hover:underline decoration-blue-500/30 transition-colors"
-                  href="#"
-                >
-                  Documentation
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-headline font-bold text-blue-900 dark:text-blue-100 text-sm mb-4">
-              Company
-            </h4>
-            <ul className="space-y-3">
-              <li>
-                <a
-                  className="font-body text-xs font-medium text-slate-500 hover:underline decoration-blue-500/30 transition-colors"
-                  href="#"
-                >
-                  About Us
-                </a>
-              </li>
-              <li>
-                <a
-                  className="font-body text-xs font-medium text-slate-500 hover:underline decoration-blue-500/30 transition-colors"
-                  href="#"
-                >
-                  Contact
-                </a>
-              </li>
-              <li>
-                <a
-                  className="font-body text-xs font-medium text-slate-500 hover:underline decoration-blue-500/30 transition-colors"
-                  href="#"
-                >
-                  Careers
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-headline font-bold text-blue-900 dark:text-blue-100 text-sm mb-4">
-              Legal
-            </h4>
-            <ul className="space-y-3">
-              <li>
-                <a
-                  className="font-body text-xs font-medium text-slate-500 hover:underline decoration-blue-500/30 transition-colors"
-                  href="#"
-                >
-                  Privacy Policy
-                </a>
-              </li>
-              <li>
-                <a
-                  className="font-body text-xs font-medium text-slate-500 hover:underline decoration-blue-500/30 transition-colors"
-                  href="#"
-                >
-                  Terms of Service
-                </a>
-              </li>
-              <li>
-                <a
-                  className="font-body text-xs font-medium text-slate-500 hover:underline decoration-blue-500/30 transition-colors"
-                  href="#"
-                >
-                  Cookie Policy
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </footer>
+      <LandingFooter />
     </div>
   );
 }

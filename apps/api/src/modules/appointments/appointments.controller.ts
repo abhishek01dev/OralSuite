@@ -49,8 +49,13 @@ export class AppointmentsController {
     try {
       const appointment = await this.service.create(req.tenantId, parsed.data);
       return sendSuccess(reply, appointment, HTTP_STATUS.CREATED);
-    } catch (e: any) {
-      return sendError(reply, HTTP_STATUS.BAD_REQUEST, 'BAD_REQUEST', e.message);
+    } catch (e: unknown) {
+      return sendError(
+        reply,
+        HTTP_STATUS.BAD_REQUEST,
+        'BAD_REQUEST',
+        e instanceof Error ? e.message : 'Unknown error',
+      );
     }
   };
 

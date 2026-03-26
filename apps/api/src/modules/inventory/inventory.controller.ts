@@ -23,7 +23,7 @@ export class InventoryController {
         parsed.error.flatten().fieldErrors,
       );
     }
-    const category = (req.query as any).category as string | undefined;
+    const category = (req.query as Record<string, string | undefined>).category;
     const result = await this.service.listItems(req.tenantId, { ...parsed.data, category });
     return sendSuccess(reply, result.data, HTTP_STATUS.OK, result.meta);
   };
@@ -51,8 +51,13 @@ export class InventoryController {
     try {
       const item = await this.service.createItem(req.tenantId, parsed.data);
       return sendSuccess(reply, item, HTTP_STATUS.CREATED);
-    } catch (e: any) {
-      return sendError(reply, HTTP_STATUS.BAD_REQUEST, 'BAD_REQUEST', e.message);
+    } catch (e: unknown) {
+      return sendError(
+        reply,
+        HTTP_STATUS.BAD_REQUEST,
+        'BAD_REQUEST',
+        e instanceof Error ? e.message : 'Unknown error',
+      );
     }
   };
 
@@ -104,15 +109,20 @@ export class InventoryController {
       const transaction = await this.service.recordStockTransaction(
         req.tenantId,
         id,
-        (req.user as any).id,
+        (req.user as Record<string, string>)?.id ?? '',
         parsed.data,
       );
       return sendSuccess(reply, transaction, HTTP_STATUS.CREATED);
-    } catch (e: any) {
-      if (e.message === 'Inventory item not found') {
+    } catch (e: unknown) {
+      if (e instanceof Error && e.message === 'Inventory item not found') {
         return sendError(reply, HTTP_STATUS.NOT_FOUND, 'NOT_FOUND', 'Inventory item not found');
       }
-      return sendError(reply, HTTP_STATUS.BAD_REQUEST, 'BAD_REQUEST', e.message);
+      return sendError(
+        reply,
+        HTTP_STATUS.BAD_REQUEST,
+        'BAD_REQUEST',
+        e instanceof Error ? e.message : 'Unknown error',
+      );
     }
   };
 }

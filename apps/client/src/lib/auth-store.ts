@@ -25,7 +25,7 @@ interface AuthState {
   logout: () => void;
   fetchUser: () => Promise<void>;
   forgotPassword: (email: string) => Promise<void>;
-  resetPassword: (data: { token: string; password: any }) => Promise<void>;
+  resetPassword: (data: { token: string; password: string }) => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -63,10 +63,9 @@ export const useAuthStore = create<AuthState>((set) => ({
     const tenantId = api.getTenantId();
     if (tenantId) api.setTenantId(tenantId);
 
-    const res = await api.post<{ data: { user: User; tokens: { accessToken: string; refreshToken: string } } }>(
-      '/auth/register',
-      data,
-    );
+    const res = await api.post<{
+      data: { user: User; tokens: { accessToken: string; refreshToken: string } };
+    }>('/auth/register', data);
 
     localStorage.setItem('accessToken', res.data.tokens.accessToken);
     localStorage.setItem('refreshToken', res.data.tokens.refreshToken);

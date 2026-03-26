@@ -1,6 +1,13 @@
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import type { TokenService, JwtPayload } from '@repo/auth';
-import { loginDto, createUserDto, forgotPasswordDto, resetPasswordDto, HTTP_STATUS, CACHE_TTL } from '@repo/shared';
+import {
+  loginDto,
+  createUserDto,
+  forgotPasswordDto,
+  resetPasswordDto,
+  HTTP_STATUS,
+  CACHE_TTL,
+} from '@repo/shared';
 import { sendSuccess, sendError } from '@utils/response.js';
 import { AuthService } from './auth.service.js';
 
@@ -48,7 +55,11 @@ export class AuthController {
       'tokenService'
     ] as TokenService;
     const tokens = tokenService.generateTokenPair(user.id, user.tenantId, user.email);
-    await tokenService.storeRefreshToken(this.extractJti(tokens.refreshToken), user.id, user.tenantId);
+    await tokenService.storeRefreshToken(
+      this.extractJti(tokens.refreshToken),
+      user.id,
+      user.tenantId,
+    );
 
     return sendSuccess(reply, { user, tokens }, HTTP_STATUS.CREATED);
   };
@@ -96,8 +107,12 @@ export class AuthController {
     const tokenService = (req.server as unknown as Record<string, unknown>)[
       'tokenService'
     ] as TokenService;
-    const tokens = tokenService.generateTokenPair(user.id, (user as any).tenantId, user.email);
-    await tokenService.storeRefreshToken(this.extractJti(tokens.refreshToken), user.id, (user as any).tenantId);
+    const tokens = tokenService.generateTokenPair(user.id, user.tenantId, user.email);
+    await tokenService.storeRefreshToken(
+      this.extractJti(tokens.refreshToken),
+      user.id,
+      user.tenantId,
+    );
 
     const roles = user.roleUsers.map((ru) => ru.role.name);
     return sendSuccess(reply, {
@@ -235,7 +250,7 @@ export class AuthController {
     // In a real app, send an email. For now, just return success.
     // In dev, maybe log the token to console.
     if (token) {
-      console.log(`[AUTH] Password reset token for ${email}: ${token}`);
+      console.warn(`[AUTH] Password reset token for ${email}: ${token}`);
     }
 
     return sendSuccess(reply, { message: 'If an account exists, a reset link has been sent.' });
@@ -257,7 +272,12 @@ export class AuthController {
     const result = await this.service.resetPassword(req.tenantId, token, password);
 
     if (!result.success) {
-      return sendError(reply, HTTP_STATUS.BAD_REQUEST, 'RESET_FAILED', result.message || 'Failed to reset password');
+      return sendError(
+        reply,
+        HTTP_STATUS.BAD_REQUEST,
+        'RESET_FAILED',
+        result.message || 'Failed to reset password',
+      );
     }
 
     return sendSuccess(reply, { message: 'Password reset successfully' });

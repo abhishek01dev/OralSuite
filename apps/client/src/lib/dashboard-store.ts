@@ -14,7 +14,7 @@ export interface DashboardStats {
     total: number;
     change: number;
   };
-  upcomingAppointments: any[];
+  upcomingAppointments: Record<string, unknown>[];
   recentInsights: {
     type: string;
     message: string;
@@ -39,8 +39,11 @@ export const useDashboardStore = create<DashboardState>((set) => ({
     try {
       const res = await api.get<{ data: DashboardStats }>('/dashboard/stats');
       set({ stats: res.data, isLoading: false });
-    } catch (err: any) {
-      set({ error: err.message, isLoading: false });
+    } catch (err: unknown) {
+      set({
+        error: err instanceof Error ? err.message : 'Failed to fetch stats',
+        isLoading: false,
+      });
     }
   },
 }));

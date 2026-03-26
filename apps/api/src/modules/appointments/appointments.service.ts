@@ -70,7 +70,7 @@ export class AppointmentsService {
   }
 
   async update(tenantId: string, id: string, data: UpdateAppointmentDto) {
-    const updateData: any = { ...data };
+    const updateData: Record<string, unknown> = { ...data };
     if (data.startTime) updateData.startTime = new Date(data.startTime);
     if (data.endTime) updateData.endTime = new Date(data.endTime);
 

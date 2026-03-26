@@ -22,7 +22,7 @@ export class ChartingController {
         parsed.error.flatten().fieldErrors,
       );
     }
-    const patientId = (req.query as any).patientId as string | undefined;
+    const patientId = (req.query as Record<string, string | undefined>).patientId;
     const result = await this.service.list(req.tenantId, { ...parsed.data, patientId });
     return sendSuccess(reply, result.data, HTTP_STATUS.OK, result.meta);
   };
@@ -50,8 +50,13 @@ export class ChartingController {
     try {
       const chart = await this.service.create(req.tenantId, parsed.data);
       return sendSuccess(reply, chart, HTTP_STATUS.CREATED);
-    } catch (e: any) {
-      return sendError(reply, HTTP_STATUS.BAD_REQUEST, 'BAD_REQUEST', e.message);
+    } catch (e: unknown) {
+      return sendError(
+        reply,
+        HTTP_STATUS.BAD_REQUEST,
+        'BAD_REQUEST',
+        e instanceof Error ? e.message : 'Unknown error',
+      );
     }
   };
 

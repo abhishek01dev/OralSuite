@@ -23,8 +23,8 @@ export class BillingController {
         parsed.error.flatten().fieldErrors,
       );
     }
-    const patientId = (req.query as any).patientId as string | undefined;
-    const status = (req.query as any).status as string | undefined;
+    const patientId = (req.query as Record<string, string | undefined>).patientId;
+    const status = (req.query as Record<string, string | undefined>).status;
     const result = await this.service.listInvoices(req.tenantId, {
       ...parsed.data,
       patientId,
@@ -55,8 +55,13 @@ export class BillingController {
     try {
       const invoice = await this.service.createInvoice(req.tenantId, parsed.data);
       return sendSuccess(reply, invoice, HTTP_STATUS.CREATED);
-    } catch (e: any) {
-      return sendError(reply, HTTP_STATUS.BAD_REQUEST, 'BAD_REQUEST', e.message);
+    } catch (e: unknown) {
+      return sendError(
+        reply,
+        HTTP_STATUS.BAD_REQUEST,
+        'BAD_REQUEST',
+        e instanceof Error ? e.message : 'Unknown error',
+      );
     }
   };
 
@@ -107,11 +112,16 @@ export class BillingController {
     try {
       const payment = await this.service.addPayment(req.tenantId, id, parsed.data);
       return sendSuccess(reply, payment, HTTP_STATUS.CREATED);
-    } catch (e: any) {
-      if (e.message === 'Invoice not found') {
+    } catch (e: unknown) {
+      if (e instanceof Error && e.message === 'Invoice not found') {
         return sendError(reply, HTTP_STATUS.NOT_FOUND, 'NOT_FOUND', 'Invoice not found');
       }
-      return sendError(reply, HTTP_STATUS.BAD_REQUEST, 'BAD_REQUEST', e.message);
+      return sendError(
+        reply,
+        HTTP_STATUS.BAD_REQUEST,
+        'BAD_REQUEST',
+        e instanceof Error ? e.message : 'Unknown error',
+      );
     }
   };
 }

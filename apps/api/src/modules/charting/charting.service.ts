@@ -70,7 +70,7 @@ export class ChartingService {
   }
 
   async update(tenantId: string, id: string, data: UpdateTreatmentChartDto) {
-    const updateData: any = { ...data };
+    const updateData: Record<string, unknown> = { ...data };
     if (data.performedAt) updateData.performedAt = new Date(data.performedAt);
 
     return prisma.treatmentChart.update({

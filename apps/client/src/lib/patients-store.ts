@@ -20,9 +20,9 @@ interface PatientsState {
   total: number;
   isLoading: boolean;
   error: string | null;
-  fetchPatients: (params?: any) => Promise<void>;
-  createPatient: (data: any) => Promise<Patient>;
-  updatePatient: (id: string, data: any) => Promise<Patient>;
+  fetchPatients: (params?: Record<string, string>) => Promise<void>;
+  createPatient: (data: Partial<Patient>) => Promise<Patient>;
+  updatePatient: (id: string, data: Partial<Patient>) => Promise<Patient>;
   deletePatient: (id: string) => Promise<void>;
 }
 
@@ -37,12 +37,15 @@ export const usePatientsStore = create<PatientsState>((set) => ({
     try {
       const res = await api.get<{ data: Patient[]; meta: { total: number } }>('/patients', params);
       set({ patients: res.data, total: res.meta.total, isLoading: false });
-    } catch (err: any) {
-      set({ error: err.message, isLoading: false });
+    } catch (err: unknown) {
+      set({
+        error: err instanceof Error ? err.message : 'Failed to fetch patients',
+        isLoading: false,
+      });
     }
   },
 
-  createPatient: async (data: any) => {
+  createPatient: async (data: Partial<Patient>) => {
     set({ isLoading: true, error: null });
     try {
       const res = await api.post<{ data: Patient }>('/patients', data);
@@ -52,13 +55,16 @@ export const usePatientsStore = create<PatientsState>((set) => ({
         isLoading: false,
       }));
       return res.data;
-    } catch (err: any) {
-      set({ error: err.message, isLoading: false });
+    } catch (err: unknown) {
+      set({
+        error: err instanceof Error ? err.message : 'Failed to create patient',
+        isLoading: false,
+      });
       throw err;
     }
   },
 
-  updatePatient: async (id: string, data: any) => {
+  updatePatient: async (id: string, data: Partial<Patient>) => {
     set({ isLoading: true, error: null });
     try {
       const res = await api.patch<{ data: Patient }>(`/patients/${id}`, data);
@@ -67,8 +73,11 @@ export const usePatientsStore = create<PatientsState>((set) => ({
         isLoading: false,
       }));
       return res.data;
-    } catch (err: any) {
-      set({ error: err.message, isLoading: false });
+    } catch (err: unknown) {
+      set({
+        error: err instanceof Error ? err.message : 'Failed to update patient',
+        isLoading: false,
+      });
       throw err;
     }
   },
@@ -82,8 +91,11 @@ export const usePatientsStore = create<PatientsState>((set) => ({
         total: state.total - 1,
         isLoading: false,
       }));
-    } catch (err: any) {
-      set({ error: err.message, isLoading: false });
+    } catch (err: unknown) {
+      set({
+        error: err instanceof Error ? err.message : 'Failed to delete patient',
+        isLoading: false,
+      });
       throw err;
     }
   },
