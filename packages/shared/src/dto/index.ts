@@ -228,3 +228,21 @@ export const resetPasswordDto = z.object({
 
 export type ForgotPasswordDto = z.infer<typeof forgotPasswordDto>;
 export type ResetPasswordDto = z.infer<typeof resetPasswordDto>;
+
+// --- Demo Requests ---
+export const createDemoRequestDto = z.object({
+  name: z.string().min(2, 'Name must be at least 2 characters').max(100),
+  email: z.string().email('Please provide a valid email address'),
+  phone: z.string().max(50).optional(),
+  description: z
+    .string()
+    .min(10, 'Please describe what you need in at least 10 characters')
+    .max(2000),
+});
+
+export const updateDemoRequestStatusDto = z.object({
+  status: z.enum(['new', 'contacted', 'closed']),
+});
+
+export type CreateDemoRequestDto = z.infer<typeof createDemoRequestDto>;
+export type UpdateDemoRequestStatusDto = z.infer<typeof updateDemoRequestStatusDto>;
