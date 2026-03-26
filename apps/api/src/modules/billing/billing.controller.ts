@@ -25,7 +25,11 @@ export class BillingController {
     }
     const patientId = (req.query as any).patientId as string | undefined;
     const status = (req.query as any).status as string | undefined;
-    const result = await this.service.listInvoices(req.tenantId, { ...parsed.data, patientId, status });
+    const result = await this.service.listInvoices(req.tenantId, {
+      ...parsed.data,
+      patientId,
+      status,
+    });
     return sendSuccess(reply, result.data, HTTP_STATUS.OK, result.meta);
   };
 
@@ -47,7 +51,7 @@ export class BillingController {
         parsed.error.flatten().fieldErrors,
       );
     }
-    
+
     try {
       const invoice = await this.service.createInvoice(req.tenantId, parsed.data);
       return sendSuccess(reply, invoice, HTTP_STATUS.CREATED);
@@ -68,11 +72,11 @@ export class BillingController {
         parsed.error.flatten().fieldErrors,
       );
     }
-    
+
     try {
       const invoice = await this.service.updateInvoice(req.tenantId, id, parsed.data);
       return sendSuccess(reply, invoice);
-    } catch (e: any) {
+    } catch {
       return sendError(reply, HTTP_STATUS.NOT_FOUND, 'NOT_FOUND', 'Invoice not found');
     }
   };

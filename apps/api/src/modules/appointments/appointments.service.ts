@@ -1,5 +1,5 @@
 import { prisma } from '@repo/db-mysql';
-import { Prisma } from '@repo/db-mysql';
+import type { Prisma } from '@repo/db-mysql';
 import type { CreateAppointmentDto, UpdateAppointmentDto, PaginationDto } from '@repo/shared';
 
 export class AppointmentsService {
@@ -12,7 +12,7 @@ export class AppointmentsService {
       },
       include: {
         patient: { select: { id: true, firstName: true, lastName: true } },
-        dentist: { select: { id: true, firstName: true, lastName: true } }
+        dentist: { select: { id: true, firstName: true, lastName: true } },
       },
       take: limit + 1,
       orderBy: {
@@ -25,7 +25,7 @@ export class AppointmentsService {
     }
 
     const items = await prisma.appointment.findMany(findManyArgs);
-    
+
     let nextCursor: string | undefined = undefined;
     if (items.length > limit) {
       const nextItem = items.pop();
@@ -49,8 +49,8 @@ export class AppointmentsService {
       },
       include: {
         patient: true,
-        dentist: true
-      }
+        dentist: true,
+      },
     });
   }
 
@@ -64,8 +64,8 @@ export class AppointmentsService {
       },
       include: {
         patient: true,
-        dentist: true
-      }
+        dentist: true,
+      },
     });
   }
 
@@ -73,7 +73,7 @@ export class AppointmentsService {
     const updateData: any = { ...data };
     if (data.startTime) updateData.startTime = new Date(data.startTime);
     if (data.endTime) updateData.endTime = new Date(data.endTime);
-    
+
     return prisma.appointment.update({
       where: {
         id,
@@ -82,8 +82,8 @@ export class AppointmentsService {
       data: updateData,
       include: {
         patient: true,
-        dentist: true
-      }
+        dentist: true,
+      },
     });
   }
 

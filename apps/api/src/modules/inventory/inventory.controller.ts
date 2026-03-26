@@ -31,7 +31,8 @@ export class InventoryController {
   getItemById = async (req: FastifyRequest, reply: FastifyReply) => {
     const { id } = req.params as { id: string };
     const item = await this.service.getItemById(req.tenantId, id);
-    if (!item) return sendError(reply, HTTP_STATUS.NOT_FOUND, 'NOT_FOUND', 'Inventory item not found');
+    if (!item)
+      return sendError(reply, HTTP_STATUS.NOT_FOUND, 'NOT_FOUND', 'Inventory item not found');
     return sendSuccess(reply, item);
   };
 
@@ -46,7 +47,7 @@ export class InventoryController {
         parsed.error.flatten().fieldErrors,
       );
     }
-    
+
     try {
       const item = await this.service.createItem(req.tenantId, parsed.data);
       return sendSuccess(reply, item, HTTP_STATUS.CREATED);
@@ -67,11 +68,11 @@ export class InventoryController {
         parsed.error.flatten().fieldErrors,
       );
     }
-    
+
     try {
       const item = await this.service.updateItem(req.tenantId, id, parsed.data);
       return sendSuccess(reply, item);
-    } catch (e: any) {
+    } catch {
       return sendError(reply, HTTP_STATUS.NOT_FOUND, 'NOT_FOUND', 'Inventory item not found');
     }
   };
@@ -100,7 +101,12 @@ export class InventoryController {
     }
 
     try {
-      const transaction = await this.service.recordStockTransaction(req.tenantId, id, (req.user as any).id, parsed.data);
+      const transaction = await this.service.recordStockTransaction(
+        req.tenantId,
+        id,
+        (req.user as any).id,
+        parsed.data,
+      );
       return sendSuccess(reply, transaction, HTTP_STATUS.CREATED);
     } catch (e: any) {
       if (e.message === 'Inventory item not found') {

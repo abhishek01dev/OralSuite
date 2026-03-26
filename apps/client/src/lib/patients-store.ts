@@ -26,7 +26,7 @@ interface PatientsState {
   deletePatient: (id: string) => Promise<void>;
 }
 
-export const usePatientsStore = create<PatientsState>((set, get) => ({
+export const usePatientsStore = create<PatientsState>((set) => ({
   patients: [],
   total: 0,
   isLoading: false,
@@ -46,10 +46,10 @@ export const usePatientsStore = create<PatientsState>((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const res = await api.post<{ data: Patient }>('/patients', data);
-      set((state) => ({ 
+      set((state) => ({
         patients: [res.data, ...state.patients],
         total: state.total + 1,
-        isLoading: false 
+        isLoading: false,
       }));
       return res.data;
     } catch (err: any) {

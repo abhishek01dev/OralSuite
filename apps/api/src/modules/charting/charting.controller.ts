@@ -30,7 +30,8 @@ export class ChartingController {
   getById = async (req: FastifyRequest, reply: FastifyReply) => {
     const { id } = req.params as { id: string };
     const chart = await this.service.getById(req.tenantId, id);
-    if (!chart) return sendError(reply, HTTP_STATUS.NOT_FOUND, 'NOT_FOUND', 'Chart record not found');
+    if (!chart)
+      return sendError(reply, HTTP_STATUS.NOT_FOUND, 'NOT_FOUND', 'Chart record not found');
     return sendSuccess(reply, chart);
   };
 
@@ -45,7 +46,7 @@ export class ChartingController {
         parsed.error.flatten().fieldErrors,
       );
     }
-    
+
     try {
       const chart = await this.service.create(req.tenantId, parsed.data);
       return sendSuccess(reply, chart, HTTP_STATUS.CREATED);
@@ -66,11 +67,11 @@ export class ChartingController {
         parsed.error.flatten().fieldErrors,
       );
     }
-    
+
     try {
       const chart = await this.service.update(req.tenantId, id, parsed.data);
       return sendSuccess(reply, chart);
-    } catch (e: any) {
+    } catch {
       return sendError(reply, HTTP_STATUS.NOT_FOUND, 'NOT_FOUND', 'Chart record not found');
     }
   };

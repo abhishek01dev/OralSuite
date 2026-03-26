@@ -1,6 +1,11 @@
 import { prisma } from '@repo/db-mysql';
-import { Prisma } from '@repo/db-mysql';
-import type { CreateInvoiceDto, UpdateInvoiceDto, CreatePaymentDto, PaginationDto } from '@repo/shared';
+import type { Prisma } from '@repo/db-mysql';
+import type {
+  CreateInvoiceDto,
+  UpdateInvoiceDto,
+  CreatePaymentDto,
+  PaginationDto,
+} from '@repo/shared';
 
 function generateInvoiceNo() {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -12,14 +17,24 @@ function generateInvoiceNo() {
 }
 
 export class BillingService {
-  async listInvoices(tenantId: string, query: PaginationDto & { patientId?: string, status?: string }) {
-    const { limit = 20, cursor, sortBy = 'createdAt', sortOrder = 'desc', patientId, status } = query;
+  async listInvoices(
+    tenantId: string,
+    query: PaginationDto & { patientId?: string; status?: string },
+  ) {
+    const {
+      limit = 20,
+      cursor,
+      sortBy = 'createdAt',
+      sortOrder = 'desc',
+      patientId,
+      status,
+    } = query;
 
     const findManyArgs: Prisma.InvoiceFindManyArgs = {
       where: {
         tenantId,
         ...(patientId ? { patientId } : {}),
-        ...(status ? { status } : {})
+        ...(status ? { status } : {}),
       },
       include: {
         patient: { select: { id: true, firstName: true, lastName: true } },
@@ -35,7 +50,7 @@ export class BillingService {
     }
 
     const items = await prisma.invoice.findMany(findManyArgs);
-    
+
     let nextCursor: string | undefined = undefined;
     if (items.length > limit) {
       const nextItem = items.pop();
@@ -60,14 +75,14 @@ export class BillingService {
       include: {
         patient: true,
         lineItems: true,
-        payments: { orderBy: { paymentDate: 'desc' } }
-      }
+        payments: { orderBy: { paymentDate: 'desc' } },
+      },
     });
   }
 
   async createInvoice(tenantId: string, data: CreateInvoiceDto) {
     const invoiceNo = generateInvoiceNo();
-    
+
     return prisma.invoice.create({
       data: {
         tenantId,
@@ -80,25 +95,25 @@ export class BillingService {
         total: data.total,
         dueDate: new Date(data.dueDate),
         lineItems: {
-          create: data.lineItems.map(item => ({
+          create: data.lineItems.map((item) => ({
             description: item.description,
             quantity: item.quantity,
             unitPrice: item.unitPrice,
-            total: item.total
-          }))
-        }
+            total: item.total,
+          })),
+        },
       },
       include: {
         patient: true,
-        lineItems: true
-      }
+        lineItems: true,
+      },
     });
   }
 
   async updateInvoice(tenantId: string, id: string, data: UpdateInvoiceDto) {
     const updateData: any = { ...data };
     if (data.dueDate) updateData.dueDate = new Date(data.dueDate);
-    
+
     // Simplification for this implementation plan: we don't update line items
     // lineItems updates would require deleting orphans and replacing/upserting
     delete updateData.lineItems;
@@ -112,8 +127,8 @@ export class BillingService {
       include: {
         patient: true,
         lineItems: true,
-        payments: true
-      }
+        payments: true,
+      },
     });
   }
 
@@ -129,7 +144,7 @@ export class BillingService {
   async addPayment(tenantId: string, id: string, data: CreatePaymentDto) {
     const invoice = await prisma.invoice.findUnique({ where: { id, tenantId } });
     if (!invoice) throw new Error('Invoice not found');
-    
+
     // Create payment and update invoice paid amount in a transaction
     return prisma.$transaction(async (tx) => {
       const payment = await tx.payment.create({
@@ -138,21 +153,21 @@ export class BillingService {
           amount: data.amount,
           method: data.method,
           reference: data.reference,
-          notes: data.notes
-        }
+          notes: data.notes,
+        },
       });
-      
+
       const newPaidAmount = Number(invoice.amountPaid) + data.amount;
       const newStatus = newPaidAmount >= Number(invoice.total) ? 'paid' : invoice.status;
-      
+
       await tx.invoice.update({
         where: { id },
         data: {
           amountPaid: newPaidAmount,
-          status: newStatus
-        }
+          status: newStatus,
+        },
       });
-      
+
       return payment;
     });
   }

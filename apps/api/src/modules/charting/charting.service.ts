@@ -1,5 +1,5 @@
 import { prisma } from '@repo/db-mysql';
-import { Prisma } from '@repo/db-mysql';
+import type { Prisma } from '@repo/db-mysql';
 import type { CreateTreatmentChartDto, UpdateTreatmentChartDto, PaginationDto } from '@repo/shared';
 
 export class ChartingService {
@@ -9,11 +9,11 @@ export class ChartingService {
     const findManyArgs: Prisma.TreatmentChartFindManyArgs = {
       where: {
         tenantId,
-        ...(patientId ? { patientId } : {})
+        ...(patientId ? { patientId } : {}),
       },
       include: {
         patient: { select: { id: true, firstName: true, lastName: true } },
-        dentist: { select: { id: true, firstName: true, lastName: true } }
+        dentist: { select: { id: true, firstName: true, lastName: true } },
       },
       take: limit + 1,
       orderBy: {
@@ -26,7 +26,7 @@ export class ChartingService {
     }
 
     const items = await prisma.treatmentChart.findMany(findManyArgs);
-    
+
     let nextCursor: string | undefined = undefined;
     if (items.length > limit) {
       const nextItem = items.pop();
@@ -50,8 +50,8 @@ export class ChartingService {
       },
       include: {
         patient: true,
-        dentist: true
-      }
+        dentist: true,
+      },
     });
   }
 
@@ -64,15 +64,15 @@ export class ChartingService {
       },
       include: {
         patient: true,
-        dentist: true
-      }
+        dentist: true,
+      },
     });
   }
 
   async update(tenantId: string, id: string, data: UpdateTreatmentChartDto) {
     const updateData: any = { ...data };
     if (data.performedAt) updateData.performedAt = new Date(data.performedAt);
-    
+
     return prisma.treatmentChart.update({
       where: {
         id,
@@ -81,8 +81,8 @@ export class ChartingService {
       data: updateData,
       include: {
         patient: true,
-        dentist: true
-      }
+        dentist: true,
+      },
     });
   }
 

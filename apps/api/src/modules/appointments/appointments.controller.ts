@@ -29,7 +29,8 @@ export class AppointmentsController {
   getById = async (req: FastifyRequest, reply: FastifyReply) => {
     const { id } = req.params as { id: string };
     const appointment = await this.service.getById(req.tenantId, id);
-    if (!appointment) return sendError(reply, HTTP_STATUS.NOT_FOUND, 'NOT_FOUND', 'Appointment not found');
+    if (!appointment)
+      return sendError(reply, HTTP_STATUS.NOT_FOUND, 'NOT_FOUND', 'Appointment not found');
     return sendSuccess(reply, appointment);
   };
 
@@ -44,7 +45,7 @@ export class AppointmentsController {
         parsed.error.flatten().fieldErrors,
       );
     }
-    
+
     try {
       const appointment = await this.service.create(req.tenantId, parsed.data);
       return sendSuccess(reply, appointment, HTTP_STATUS.CREATED);
@@ -65,11 +66,11 @@ export class AppointmentsController {
         parsed.error.flatten().fieldErrors,
       );
     }
-    
+
     try {
       const appointment = await this.service.update(req.tenantId, id, parsed.data);
       return sendSuccess(reply, appointment);
-    } catch (e: any) {
+    } catch {
       return sendError(reply, HTTP_STATUS.NOT_FOUND, 'NOT_FOUND', 'Appointment not found');
     }
   };

@@ -16,8 +16,10 @@ export const connectMongo = async (): Promise<void> => {
 
     isConnected = true;
     console.warn('MongoDB connected successfully');
-  } catch (error) {
-    console.warn('⚠️  MongoDB is not available — audit logging and other Mongo features will be disabled.');
+  } catch {
+    console.warn(
+      '⚠️  MongoDB is not available — audit logging and other Mongo features will be disabled.',
+    );
   }
 };
 

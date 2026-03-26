@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
+
 import { useAuthStore } from '@/lib/auth-store';
 
 interface NavItem {
@@ -50,15 +50,21 @@ export const Sidebar = ({ collapsed, onToggle }: SidebarProps) => {
       }`}
     >
       {/* Header */}
-      <div className={`flex h-16 items-center border-b border-slate-800/60 shrink-0 ${collapsed ? 'justify-center px-0' : 'justify-between px-4'}`}>
+      <div
+        className={`flex h-16 items-center border-b border-slate-800/60 shrink-0 ${collapsed ? 'justify-center px-0' : 'justify-between px-4'}`}
+      >
         {!collapsed && (
           <div className="flex items-center gap-2.5 overflow-hidden">
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary text-sm font-bold text-white">
               <span className="material-symbols-outlined text-sm">shield</span>
             </div>
             <div className="overflow-hidden">
-              <span className="block text-base font-bold tracking-tight text-white font-manrope whitespace-nowrap">DentFlow</span>
-              <span className="block text-[10px] uppercase tracking-widest text-slate-400 font-semibold">Super Admin</span>
+              <span className="block text-base font-bold tracking-tight text-white font-manrope whitespace-nowrap">
+                DentFlow
+              </span>
+              <span className="block text-[10px] uppercase tracking-widest text-slate-400 font-semibold">
+                Super Admin
+              </span>
             </div>
           </div>
         )}
@@ -94,7 +100,10 @@ export const Sidebar = ({ collapsed, onToggle }: SidebarProps) => {
                       : 'text-slate-400 hover:bg-slate-800 hover:text-white'
                   }`}
                 >
-                  <span className={`material-symbols-outlined shrink-0 ${isActive ? 'text-blue-400' : ''}`} style={{ fontSize: '20px' }}>
+                  <span
+                    className={`material-symbols-outlined shrink-0 ${isActive ? 'text-blue-400' : ''}`}
+                    style={{ fontSize: '20px' }}
+                  >
                     {item.icon}
                   </span>
                   {!collapsed && (
@@ -130,7 +139,9 @@ export const Sidebar = ({ collapsed, onToggle }: SidebarProps) => {
                 title="Sign out"
                 className="cursor-pointer rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-800 hover:text-red-400"
               >
-                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>logout</span>
+                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
+                  logout
+                </span>
               </button>
             )}
           </div>
@@ -140,7 +151,9 @@ export const Sidebar = ({ collapsed, onToggle }: SidebarProps) => {
               title="Sign out"
               className="cursor-pointer mt-2 rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-800 hover:text-red-400 w-full flex items-center justify-center"
             >
-              <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>logout</span>
+              <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
+                logout
+              </span>
             </button>
           )}
         </div>

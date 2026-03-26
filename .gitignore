@@ -60,4 +60,6 @@ docker/data/
 tmp/
 docs/
 .vercel
-.turbo.json
+.turbo.json
+.cursor/
+.agents/

@@ -6,6 +6,14 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ['@repo/ui'],
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+      },
+    ],
+  },
 };
 
 export default nextConfig;

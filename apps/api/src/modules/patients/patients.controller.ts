@@ -1,10 +1,5 @@
 import type { FastifyRequest, FastifyReply } from 'fastify';
-import {
-  HTTP_STATUS,
-  createPatientDto,
-  updatePatientDto,
-  paginationSchema,
-} from '@repo/shared';
+import { HTTP_STATUS, createPatientDto, updatePatientDto, paginationSchema } from '@repo/shared';
 import { sendSuccess, sendError } from '@utils/response.js';
 import { PatientsService } from './patients.service.js';
 
@@ -60,11 +55,11 @@ export class PatientsController {
         parsed.error.flatten().fieldErrors,
       );
     }
-    
+
     try {
       const patient = await this.service.update(req.tenantId, id, parsed.data);
       return sendSuccess(reply, patient);
-    } catch (e) {
+    } catch {
       return sendError(reply, HTTP_STATUS.NOT_FOUND, 'NOT_FOUND', 'Patient not found');
     }
   };

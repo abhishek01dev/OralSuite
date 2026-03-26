@@ -1,6 +1,11 @@
 import { prisma } from '@repo/db-mysql';
-import { Prisma } from '@repo/db-mysql';
-import type { CreateInventoryItemDto, UpdateInventoryItemDto, CreateStockTransactionDto, PaginationDto } from '@repo/shared';
+import type { Prisma } from '@repo/db-mysql';
+import type {
+  CreateInventoryItemDto,
+  UpdateInventoryItemDto,
+  CreateStockTransactionDto,
+  PaginationDto,
+} from '@repo/shared';
 
 export class InventoryService {
   async listItems(tenantId: string, query: PaginationDto & { category?: string }) {
@@ -9,7 +14,7 @@ export class InventoryService {
     const findManyArgs: Prisma.InventoryItemFindManyArgs = {
       where: {
         tenantId,
-        ...(category ? { category } : {})
+        ...(category ? { category } : {}),
       },
       take: limit + 1,
       orderBy: {
@@ -22,7 +27,7 @@ export class InventoryService {
     }
 
     const items = await prisma.inventoryItem.findMany(findManyArgs);
-    
+
     let nextCursor: string | undefined = undefined;
     if (items.length > limit) {
       const nextItem = items.pop();
@@ -48,9 +53,9 @@ export class InventoryService {
         transactions: {
           orderBy: { createdAt: 'desc' },
           take: 10,
-          include: { user: { select: { firstName: true, lastName: true } } }
-        }
-      }
+          include: { user: { select: { firstName: true, lastName: true } } },
+        },
+      },
     });
   }
 
@@ -59,7 +64,7 @@ export class InventoryService {
       data: {
         ...data,
         tenantId,
-      }
+      },
     });
   }
 
@@ -69,7 +74,7 @@ export class InventoryService {
         id,
         tenantId,
       },
-      data
+      data,
     });
   }
 
@@ -82,7 +87,12 @@ export class InventoryService {
     });
   }
 
-  async recordStockTransaction(tenantId: string, id: string, userId: string, data: CreateStockTransactionDto) {
+  async recordStockTransaction(
+    tenantId: string,
+    id: string,
+    userId: string,
+    data: CreateStockTransactionDto,
+  ) {
     const item = await prisma.inventoryItem.findUnique({ where: { id, tenantId } });
     if (!item) throw new Error('Inventory item not found');
 
@@ -98,15 +108,15 @@ export class InventoryService {
           type: data.type,
           quantity: data.quantity,
           reason: data.reason,
-          performedBy: userId
-        }
+          performedBy: userId,
+        },
       });
-      
+
       await tx.inventoryItem.update({
         where: { id },
-        data: { quantity: newQuantity }
+        data: { quantity: newQuantity },
       });
-      
+
       return transaction;
     });
   }

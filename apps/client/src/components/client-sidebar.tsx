@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 interface NavItem {
   label: string;
@@ -40,15 +40,21 @@ export function ClientSidebar({ collapsed, onToggle }: ClientSidebarProps) {
       }`}
     >
       {/* Header */}
-      <div className={`flex h-16 items-center border-b border-outline-variant/15 shrink-0 ${collapsed ? 'justify-center px-0' : 'justify-between px-4'}`}>
+      <div
+        className={`flex h-16 items-center border-b border-outline-variant/15 shrink-0 ${collapsed ? 'justify-center px-0' : 'justify-between px-4'}`}
+      >
         {!collapsed && (
           <Link href="/" className="flex items-center gap-2.5 overflow-hidden group">
             <div className="w-9 h-9 shrink-0 bg-primary rounded-xl flex items-center justify-center text-on-primary group-hover:scale-105 transition-transform">
               <span className="material-symbols-outlined text-sm">dentistry</span>
             </div>
             <div className="overflow-hidden">
-              <span className="block text-base font-bold tracking-tight text-primary font-manrope whitespace-nowrap">DentFlow</span>
-              <span className="block text-[10px] uppercase tracking-widest text-on-surface-variant/60 font-semibold">Clinical OS</span>
+              <span className="block text-base font-bold tracking-tight text-primary font-manrope whitespace-nowrap">
+                DentFlow
+              </span>
+              <span className="block text-[10px] uppercase tracking-widest text-on-surface-variant/60 font-semibold">
+                Clinical OS
+              </span>
             </div>
           </Link>
         )}
@@ -84,7 +90,10 @@ export function ClientSidebar({ collapsed, onToggle }: ClientSidebarProps) {
                       : 'text-on-surface-variant hover:bg-primary-fixed/15 hover:text-primary'
                   }`}
                 >
-                  <span className={`material-symbols-outlined shrink-0`} style={{ fontSize: '20px' }}>
+                  <span
+                    className={`material-symbols-outlined shrink-0`}
+                    style={{ fontSize: '20px' }}
+                  >
                     {item.icon}
                   </span>
                   {!collapsed && (
@@ -109,7 +118,9 @@ export function ClientSidebar({ collapsed, onToggle }: ClientSidebarProps) {
                 title={collapsed ? item.label : undefined}
                 className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-on-surface-variant hover:bg-primary-fixed/15 hover:text-primary transition-all duration-200 ${collapsed ? 'justify-center' : ''}`}
               >
-                <span className="material-symbols-outlined shrink-0" style={{ fontSize: '20px' }}>{item.icon}</span>
+                <span className="material-symbols-outlined shrink-0" style={{ fontSize: '20px' }}>
+                  {item.icon}
+                </span>
                 {!collapsed && <span className="whitespace-nowrap">{item.label}</span>}
               </Link>
             </li>
@@ -129,7 +140,9 @@ export function ClientSidebar({ collapsed, onToggle }: ClientSidebarProps) {
             title="Quick Add"
             className="w-full flex items-center justify-center p-2.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
           >
-            <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>add</span>
+            <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>
+              add
+            </span>
           </button>
         )}
       </div>
