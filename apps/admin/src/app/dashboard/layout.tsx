@@ -1,6 +1,6 @@
-"use client";
-import { useState, useEffect } from "react";
-import { Sidebar } from "@/components/sidebar";
+'use client';
+import { useState, useEffect } from 'react';
+import { Sidebar } from '@/components/sidebar';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
@@ -30,7 +30,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       >
         <div className="flex items-center gap-4 flex-1">
           <div className="relative w-80 group">
-            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">
+              search
+            </span>
             <input
               className="w-full bg-surface-container-low border-none rounded-xl pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary/10 transition-all outline-none placeholder:text-slate-400"
               placeholder="Search clinics, invoices, or tickets..."
@@ -64,9 +66,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           collapsed ? 'ml-16' : 'ml-64'
         }`}
       >
-        <div className="max-w-7xl mx-auto py-8">
-          {children}
-        </div>
+        <div className="max-w-7xl mx-auto py-8">{children}</div>
       </main>
     </div>
   );

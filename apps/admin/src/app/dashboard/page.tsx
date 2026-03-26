@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 export default function DashboardPage() {
   return (
@@ -6,8 +6,12 @@ export default function DashboardPage() {
       {/* Header Section */}
       <div className="mb-10 flex justify-between items-end">
         <div>
-          <h2 className="text-4xl font-extrabold font-manrope tracking-tight text-on-surface mb-2">Platform Pulse</h2>
-          <p className="text-on-surface-variant max-w-xl">Overview of DentFlow's network performance, revenue growth, and operational health.</p>
+          <h2 className="text-4xl font-extrabold font-manrope tracking-tight text-on-surface mb-2">
+            Platform Pulse
+          </h2>
+          <p className="text-on-surface-variant max-w-xl">
+            Overview of DentFlow's network performance, revenue growth, and operational health.
+          </p>
         </div>
         <div className="flex gap-3">
           <button className="bg-surface-container-lowest text-primary px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-surface-container-high transition-all flex items-center gap-2">
@@ -34,7 +38,9 @@ export default function DashboardPage() {
               +12.4%
             </span>
           </div>
-          <p className="text-on-surface-variant text-xs font-semibold uppercase tracking-wider mb-1">Monthly Recurring Revenue</p>
+          <p className="text-on-surface-variant text-xs font-semibold uppercase tracking-wider mb-1">
+            Monthly Recurring Revenue
+          </p>
           <h3 className="text-3xl font-extrabold font-manrope text-on-surface">$142,500</h3>
         </div>
 
@@ -49,7 +55,9 @@ export default function DashboardPage() {
               48
             </span>
           </div>
-          <p className="text-on-surface-variant text-xs font-semibold uppercase tracking-wider mb-1">Total Active Clinics</p>
+          <p className="text-on-surface-variant text-xs font-semibold uppercase tracking-wider mb-1">
+            Total Active Clinics
+          </p>
           <h3 className="text-3xl font-extrabold font-manrope text-on-surface">1,284</h3>
         </div>
 
@@ -64,7 +72,9 @@ export default function DashboardPage() {
               -0.8%
             </span>
           </div>
-          <p className="text-on-surface-variant text-xs font-semibold uppercase tracking-wider mb-1">Daily Active Users</p>
+          <p className="text-on-surface-variant text-xs font-semibold uppercase tracking-wider mb-1">
+            Daily Active Users
+          </p>
           <h3 className="text-3xl font-extrabold font-manrope text-on-surface">8,912</h3>
         </div>
 
@@ -79,7 +89,9 @@ export default function DashboardPage() {
               +4.2%
             </span>
           </div>
-          <p className="text-on-surface-variant text-xs font-semibold uppercase tracking-wider mb-1">Avg. Revenue Per Tenant</p>
+          <p className="text-on-surface-variant text-xs font-semibold uppercase tracking-wider mb-1">
+            Avg. Revenue Per Tenant
+          </p>
           <h3 className="text-3xl font-extrabold font-manrope text-on-surface">$110.98</h3>
         </div>
       </section>
@@ -90,18 +102,28 @@ export default function DashboardPage() {
         <div className="lg:col-span-2 bg-surface-container-lowest p-8 rounded-xl">
           <div className="flex justify-between items-center mb-8">
             <div>
-              <h4 className="text-xl font-bold font-manrope text-on-surface">Subscription Revenue Growth</h4>
-              <p className="text-sm text-on-surface-variant">Last 12 months performance trajectory</p>
+              <h4 className="text-xl font-bold font-manrope text-on-surface">
+                Subscription Revenue Growth
+              </h4>
+              <p className="text-sm text-on-surface-variant">
+                Last 12 months performance trajectory
+              </p>
             </div>
             <div className="flex bg-surface-container-low p-1 rounded-lg">
-              <button className="px-4 py-1.5 text-xs font-bold bg-white text-primary rounded-md shadow-sm">Revenue</button>
-              <button className="px-4 py-1.5 text-xs font-bold text-on-surface-variant hover:text-primary transition-colors">Churn</button>
+              <button className="px-4 py-1.5 text-xs font-bold bg-white text-primary rounded-md shadow-sm">
+                Revenue
+              </button>
+              <button className="px-4 py-1.5 text-xs font-bold text-on-surface-variant hover:text-primary transition-colors">
+                Churn
+              </button>
             </div>
           </div>
           {/* Mock Chart Visualization */}
           <div className="h-64 flex items-end justify-between gap-4 px-2">
             <div className="w-full bg-surface-container-high rounded-t-lg h-[40%] relative group">
-              <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-primary text-white text-[10px] px-2 py-1 rounded">Jan</div>
+              <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-primary text-white text-[10px] px-2 py-1 rounded">
+                Jan
+              </div>
             </div>
             <div className="w-full bg-surface-container-high rounded-t-lg h-[45%]"></div>
             <div className="w-full bg-surface-container-high rounded-t-lg h-[55%]"></div>
@@ -116,24 +138,60 @@ export default function DashboardPage() {
             <div className="w-full bg-primary rounded-t-lg h-[100%]"></div>
           </div>
           <div className="flex justify-between mt-4 text-[10px] text-on-surface-variant font-bold uppercase tracking-tighter">
-            <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span>
+            <span>Jan</span>
+            <span>Feb</span>
+            <span>Mar</span>
+            <span>Apr</span>
+            <span>May</span>
+            <span>Jun</span>
+            <span>Jul</span>
+            <span>Aug</span>
+            <span>Sep</span>
+            <span>Oct</span>
+            <span>Nov</span>
+            <span>Dec</span>
           </div>
         </div>
-        
+
         {/* Plan Distribution */}
         <div className="space-y-8">
           <div className="bg-surface-container-lowest p-8 rounded-xl h-full flex flex-col">
-            <h4 className="text-xl font-bold font-manrope text-on-surface mb-6">Plan Distribution</h4>
+            <h4 className="text-xl font-bold font-manrope text-on-surface mb-6">
+              Plan Distribution
+            </h4>
             <div className="flex-1 flex flex-col justify-center">
               <div className="relative w-40 h-40 mx-auto mb-8">
                 <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-                  <path className="text-primary-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeDasharray="100, 100" strokeWidth="3"></path>
-                  <path className="text-primary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeDasharray="75, 100" strokeWidth="4"></path>
-                  <path className="text-tertiary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeDasharray="35, 100" strokeWidth="4"></path>
+                  <path
+                    className="text-primary-container"
+                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeDasharray="100, 100"
+                    strokeWidth="3"
+                  ></path>
+                  <path
+                    className="text-primary"
+                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeDasharray="75, 100"
+                    strokeWidth="4"
+                  ></path>
+                  <path
+                    className="text-tertiary"
+                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeDasharray="35, 100"
+                    strokeWidth="4"
+                  ></path>
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
                   <span className="text-2xl font-bold font-manrope">1.2k</span>
-                  <span className="text-[10px] text-on-surface-variant font-bold uppercase">Total</span>
+                  <span className="text-[10px] text-on-surface-variant font-bold uppercase">
+                    Total
+                  </span>
                 </div>
               </div>
               <div className="space-y-4">
@@ -168,12 +226,18 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
         <div className="bg-surface-container-lowest p-8 rounded-xl border-l-4 border-secondary">
           <div className="flex items-center justify-between mb-8">
-            <h4 className="text-xl font-bold font-manrope text-on-surface">Infrastructure Health</h4>
-            <span className="bg-secondary/10 text-secondary px-3 py-1 rounded-full text-[10px] font-bold uppercase">All Systems Nominal</span>
+            <h4 className="text-xl font-bold font-manrope text-on-surface">
+              Infrastructure Health
+            </h4>
+            <span className="bg-secondary/10 text-secondary px-3 py-1 rounded-full text-[10px] font-bold uppercase">
+              All Systems Nominal
+            </span>
           </div>
           <div className="grid grid-cols-3 gap-6">
             <div className="p-4 bg-surface-container-low rounded-xl">
-              <p className="text-[10px] font-bold text-on-surface-variant uppercase mb-2">API Latency</p>
+              <p className="text-[10px] font-bold text-on-surface-variant uppercase mb-2">
+                API Latency
+              </p>
               <p className="text-2xl font-bold font-manrope text-on-surface">24ms</p>
               <div className="mt-3 flex gap-0.5">
                 <div className="h-1 w-full bg-secondary rounded-full"></div>
@@ -183,7 +247,9 @@ export default function DashboardPage() {
               </div>
             </div>
             <div className="p-4 bg-surface-container-low rounded-xl">
-              <p className="text-[10px] font-bold text-on-surface-variant uppercase mb-2">Server Uptime</p>
+              <p className="text-[10px] font-bold text-on-surface-variant uppercase mb-2">
+                Server Uptime
+              </p>
               <p className="text-2xl font-bold font-manrope text-on-surface">99.98%</p>
               <div className="mt-3 flex gap-0.5">
                 <div className="h-1 w-full bg-secondary rounded-full"></div>
@@ -193,7 +259,9 @@ export default function DashboardPage() {
               </div>
             </div>
             <div className="p-4 bg-surface-container-low rounded-xl">
-              <p className="text-[10px] font-bold text-on-surface-variant uppercase mb-2">DB Connections</p>
+              <p className="text-[10px] font-bold text-on-surface-variant uppercase mb-2">
+                DB Connections
+              </p>
               <p className="text-2xl font-bold font-manrope text-on-surface">1.2k</p>
               <div className="mt-3 flex gap-0.5">
                 <div className="h-1 w-full bg-secondary rounded-full"></div>
@@ -218,32 +286,48 @@ export default function DashboardPage() {
         <div className="bg-surface-container-lowest p-8 rounded-xl">
           <div className="flex items-center justify-between mb-8">
             <h4 className="text-xl font-bold font-manrope text-on-surface">Critical Tickets</h4>
-            <a className="text-primary text-xs font-bold hover:underline" href="#">View All Tickets</a>
+            <a className="text-primary text-xs font-bold hover:underline" href="#">
+              View All Tickets
+            </a>
           </div>
           <div className="space-y-4">
             <div className="flex items-center gap-4 p-4 bg-error-container/20 rounded-xl group cursor-pointer hover:bg-error-container/30 transition-all">
-              <div className="w-10 h-10 bg-error-container text-error rounded-full flex items-center justify-center font-bold">1</div>
+              <div className="w-10 h-10 bg-error-container text-error rounded-full flex items-center justify-center font-bold">
+                1
+              </div>
               <div className="flex-1">
                 <p className="text-sm font-bold text-on-surface">SSO Authentication Failure</p>
-                <p className="text-xs text-on-surface-variant">Metropolitan Dental Group • 14m ago</p>
+                <p className="text-xs text-on-surface-variant">
+                  Metropolitan Dental Group • 14m ago
+                </p>
               </div>
-              <span className="material-symbols-outlined text-slate-300 group-hover:text-error transition-colors">chevron_right</span>
+              <span className="material-symbols-outlined text-slate-300 group-hover:text-error transition-colors">
+                chevron_right
+              </span>
             </div>
             <div className="flex items-center gap-4 p-4 bg-surface-container-low rounded-xl group cursor-pointer hover:bg-surface-container-high transition-all">
-              <div className="w-10 h-10 bg-surface-variant text-primary rounded-full flex items-center justify-center font-bold">2</div>
+              <div className="w-10 h-10 bg-surface-variant text-primary rounded-full flex items-center justify-center font-bold">
+                2
+              </div>
               <div className="flex-1">
                 <p className="text-sm font-bold text-on-surface">Bulk X-Ray Import Delay</p>
                 <p className="text-xs text-on-surface-variant">Smile Center Austin • 2h ago</p>
               </div>
-              <span className="material-symbols-outlined text-slate-300 group-hover:text-primary transition-colors">chevron_right</span>
+              <span className="material-symbols-outlined text-slate-300 group-hover:text-primary transition-colors">
+                chevron_right
+              </span>
             </div>
             <div className="flex items-center gap-4 p-4 bg-surface-container-low rounded-xl group cursor-pointer hover:bg-surface-container-high transition-all">
-              <div className="w-10 h-10 bg-surface-variant text-primary rounded-full flex items-center justify-center font-bold">3</div>
+              <div className="w-10 h-10 bg-surface-variant text-primary rounded-full flex items-center justify-center font-bold">
+                3
+              </div>
               <div className="flex-1">
                 <p className="text-sm font-bold text-on-surface">Billing Cycle Discrepancy</p>
                 <p className="text-xs text-on-surface-variant">Pure Dental Clinic • 5h ago</p>
               </div>
-              <span className="material-symbols-outlined text-slate-300 group-hover:text-primary transition-colors">chevron_right</span>
+              <span className="material-symbols-outlined text-slate-300 group-hover:text-primary transition-colors">
+                chevron_right
+              </span>
             </div>
           </div>
         </div>
@@ -251,7 +335,9 @@ export default function DashboardPage() {
 
       <section className="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm">
         <div className="p-8 border-b border-surface-container-low flex justify-between items-center">
-          <h4 className="text-xl font-bold font-manrope text-on-surface">Recent Signups &amp; Tenant Status</h4>
+          <h4 className="text-xl font-bold font-manrope text-on-surface">
+            Recent Signups &amp; Tenant Status
+          </h4>
           <div className="flex gap-4">
             <select className="bg-surface-container-low border-none rounded-lg text-xs font-bold py-2 px-4 outline-none">
               <option>All Statuses</option>
@@ -265,11 +351,21 @@ export default function DashboardPage() {
           <table className="w-full text-left">
             <thead className="bg-surface-container-low/50">
               <tr>
-                <th className="px-8 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Clinic Name</th>
-                <th className="px-8 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Administrator</th>
-                <th className="px-8 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Plan</th>
-                <th className="px-8 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Status</th>
-                <th className="px-8 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Health Score</th>
+                <th className="px-8 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+                  Clinic Name
+                </th>
+                <th className="px-8 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+                  Administrator
+                </th>
+                <th className="px-8 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+                  Plan
+                </th>
+                <th className="px-8 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+                  Status
+                </th>
+                <th className="px-8 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+                  Health Score
+                </th>
                 <th className="px-8 py-4"></th>
               </tr>
             </thead>
@@ -277,7 +373,9 @@ export default function DashboardPage() {
               <tr className="hover:bg-surface-container-low/30 transition-colors">
                 <td className="px-8 py-5">
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded bg-primary-container/20 flex items-center justify-center text-primary font-bold">NP</div>
+                    <div className="w-9 h-9 rounded bg-primary-container/20 flex items-center justify-center text-primary font-bold">
+                      NP
+                    </div>
                     <div>
                       <p className="text-sm font-bold text-on-surface">North Peak Dental</p>
                       <p className="text-xs text-on-surface-variant">Joined 2 days ago</p>
@@ -289,7 +387,9 @@ export default function DashboardPage() {
                   <p className="text-xs text-on-surface-variant">sarah@northpeak.com</p>
                 </td>
                 <td className="px-8 py-5">
-                  <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-bold">Enterprise</span>
+                  <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-bold">
+                    Enterprise
+                  </span>
                 </td>
                 <td className="px-8 py-5">
                   <div className="flex items-center gap-2">
@@ -311,7 +411,9 @@ export default function DashboardPage() {
               <tr className="hover:bg-surface-container-low/30 transition-colors">
                 <td className="px-8 py-5">
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded bg-tertiary-fixed-dim/20 flex items-center justify-center text-tertiary font-bold">OB</div>
+                    <div className="w-9 h-9 rounded bg-tertiary-fixed-dim/20 flex items-center justify-center text-tertiary font-bold">
+                      OB
+                    </div>
                     <div>
                       <p className="text-sm font-bold text-on-surface">Ocean Breeze Ortho</p>
                       <p className="text-xs text-on-surface-variant">Joined 4 days ago</p>
@@ -323,12 +425,16 @@ export default function DashboardPage() {
                   <p className="text-xs text-on-surface-variant">m.chang@oceanbreeze.com</p>
                 </td>
                 <td className="px-8 py-5">
-                  <span className="bg-surface-container-high text-on-surface-variant px-3 py-1 rounded-full text-xs font-bold">Basic</span>
+                  <span className="bg-surface-container-high text-on-surface-variant px-3 py-1 rounded-full text-xs font-bold">
+                    Basic
+                  </span>
                 </td>
                 <td className="px-8 py-5">
                   <div className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></span>
-                    <span className="text-xs font-semibold text-on-tertiary-fixed-variant">Trialing</span>
+                    <span className="text-xs font-semibold text-on-tertiary-fixed-variant">
+                      Trialing
+                    </span>
                   </div>
                 </td>
                 <td className="px-8 py-5">
@@ -345,7 +451,9 @@ export default function DashboardPage() {
               <tr className="hover:bg-surface-container-low/30 transition-colors">
                 <td className="px-8 py-5">
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded bg-error-container/20 flex items-center justify-center text-error font-bold">LV</div>
+                    <div className="w-9 h-9 rounded bg-error-container/20 flex items-center justify-center text-error font-bold">
+                      LV
+                    </div>
                     <div>
                       <p className="text-sm font-bold text-on-surface">Lakeside Vista Clinic</p>
                       <p className="text-xs text-on-surface-variant">Joined 1 month ago</p>
@@ -357,7 +465,9 @@ export default function DashboardPage() {
                   <p className="text-xs text-on-surface-variant">e.rod@lakesidevista.io</p>
                 </td>
                 <td className="px-8 py-5">
-                  <span className="bg-tertiary/10 text-tertiary px-3 py-1 rounded-full text-xs font-bold">Pro</span>
+                  <span className="bg-tertiary/10 text-tertiary px-3 py-1 rounded-full text-xs font-bold">
+                    Pro
+                  </span>
                 </td>
                 <td className="px-8 py-5">
                   <div className="flex items-center gap-2">

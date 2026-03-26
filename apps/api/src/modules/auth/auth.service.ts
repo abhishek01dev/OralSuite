@@ -19,15 +19,24 @@ export class AuthService {
 
   async registerUser(
     tenantId: string,
-    data: { email: string; password: string; firstName: string; lastName: string; practiceName?: string },
+    data: {
+      email: string;
+      password: string;
+      firstName: string;
+      lastName: string;
+      practiceName?: string;
+    },
   ) {
     let targetTenantId = tenantId;
     let isNewTenant = false;
 
     if (data.practiceName) {
       // Create a unique slug for the tenant
-      let slug = data.practiceName.toLowerCase().replace(/[^a-z0-9]/g, '-').substring(0, 40);
-      
+      let slug = data.practiceName
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, '-')
+        .substring(0, 40);
+
       // Check if slug already exists, if so append random string
       const existingTenant = await prisma.tenant.findUnique({ where: { slug } });
       if (existingTenant) {
@@ -43,7 +52,7 @@ export class AuthService {
       });
       targetTenantId = tenant.id;
       isNewTenant = true;
-      
+
       // Initialize basic roles for the new tenant
       await this.initializeTenant(targetTenantId);
     }
@@ -52,7 +61,7 @@ export class AuthService {
     const passwordHash = await PasswordService.hash(data.password);
 
     const roleSlug = isNewTenant ? DEFAULT_ROLES.TENANT_ADMIN : DEFAULT_ROLES.MEMBER;
-    
+
     // Find role by slug for this specific tenant
     let role = await db.role.findFirst({
       where: { slug: roleSlug, tenantId: targetTenantId },
@@ -63,7 +72,7 @@ export class AuthService {
       // Create default roles for the new tenant if they don't exist
       // In this demo, we'll try to find any role with that slug or just use the system one if allowed
       role = await prisma.role.findFirst({
-        where: { slug: roleSlug }
+        where: { slug: roleSlug },
       });
     }
 
@@ -89,7 +98,7 @@ export class AuthService {
 
   async initializeTenant(tenantId: string) {
     const db = createTenantPrisma(tenantId);
-    
+
     // Create basic roles for the new tenant
     await db.role.createMany({
       data: [
@@ -111,7 +120,7 @@ export class AuthService {
     });
 
     // Note: PermissionRoles normally follow here too, but for this implementation
-    // let's assume global policy checks or system-level permission lookup 
+    // let's assume global policy checks or system-level permission lookup
     // satisfies basics. A full implementation would clone permissions too.
   }
 
@@ -171,7 +180,8 @@ export class AuthService {
     if (!user) return null;
 
     // Generate a secure token (using a simple random string for now, could be more robust)
-    const token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    const token =
+      Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     const expiresAt = new Date();
     expiresAt.setHours(expiresAt.getHours() + 1); // 1 hour expiry
 

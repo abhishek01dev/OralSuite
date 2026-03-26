@@ -113,7 +113,13 @@ export class CacheService {
       const fullPattern = this.key(pattern);
       let cursor = '0';
       do {
-        const [nextCursor, keys] = await this.client.scan(cursor, 'MATCH', fullPattern, 'COUNT', 100);
+        const [nextCursor, keys] = await this.client.scan(
+          cursor,
+          'MATCH',
+          fullPattern,
+          'COUNT',
+          100,
+        );
         cursor = nextCursor;
         if (keys.length > 0) {
           await this.client.del(...keys);

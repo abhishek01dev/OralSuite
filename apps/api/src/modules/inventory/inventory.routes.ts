@@ -9,7 +9,15 @@ export async function inventoryRoutes(app: FastifyInstance): Promise<void> {
   app.get('/:id', { preHandler: [requirePermission('inventory.read')] }, controller.getItemById);
   app.post('/', { preHandler: [requirePermission('inventory.create')] }, controller.createItem);
   app.put('/:id', { preHandler: [requirePermission('inventory.update')] }, controller.updateItem);
-  app.delete('/:id', { preHandler: [requirePermission('inventory.delete')] }, controller.deleteItem);
+  app.delete(
+    '/:id',
+    { preHandler: [requirePermission('inventory.delete')] },
+    controller.deleteItem,
+  );
 
-  app.post('/:id/transactions', { preHandler: [requirePermission('inventory.update')] }, controller.recordTransaction);
+  app.post(
+    '/:id/transactions',
+    { preHandler: [requirePermission('inventory.update')] },
+    controller.recordTransaction,
+  );
 }

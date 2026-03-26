@@ -161,12 +161,16 @@ export const createInvoiceDto = z.object({
   discount: z.number().min(0).default(0),
   total: z.number().min(0),
   dueDate: z.string().datetime(),
-  lineItems: z.array(z.object({
-    description: z.string().min(1),
-    quantity: z.number().int().min(1).default(1),
-    unitPrice: z.number().min(0),
-    total: z.number().min(0)
-  })).min(1)
+  lineItems: z
+    .array(
+      z.object({
+        description: z.string().min(1),
+        quantity: z.number().int().min(1).default(1),
+        unitPrice: z.number().min(0),
+        total: z.number().min(0),
+      }),
+    )
+    .min(1),
 });
 
 export const updateInvoiceDto = createInvoiceDto.partial();
@@ -175,7 +179,7 @@ export const createPaymentDto = z.object({
   amount: z.number().min(0),
   method: z.string().min(1),
   reference: z.string().optional(),
-  notes: z.string().optional()
+  notes: z.string().optional(),
 });
 
 // --- Inventory ---
@@ -187,7 +191,7 @@ export const createInventoryItemDto = z.object({
   quantity: z.number().int().default(0),
   minQuantity: z.number().int().default(10),
   costPrice: z.number().min(0).optional(),
-  supplier: z.string().optional()
+  supplier: z.string().optional(),
 });
 
 export const updateInventoryItemDto = createInventoryItemDto.partial();
@@ -195,7 +199,7 @@ export const updateInventoryItemDto = createInventoryItemDto.partial();
 export const createStockTransactionDto = z.object({
   type: z.enum(['in', 'out']),
   quantity: z.number().int().min(1),
-  reason: z.string().optional()
+  reason: z.string().optional(),
 });
 
 export type CreatePatientDto = z.infer<typeof createPatientDto>;
