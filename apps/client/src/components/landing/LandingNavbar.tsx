@@ -82,7 +82,7 @@ export function LandingNavbar() {
           </Link>
           <Link
             className="bg-primary text-on-primary px-6 py-2.5 rounded-xl font-headline font-bold text-sm hover:shadow-lg hover:shadow-primary/20 transition-all active:scale-95"
-            href="/login"
+            href="/book-demo"
           >
             Book Demo
           </Link>

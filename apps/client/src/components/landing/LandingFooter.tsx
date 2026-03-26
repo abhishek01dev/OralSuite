@@ -47,7 +47,7 @@ export function LandingFooter() {
               </Link>
             </li>
             <li>
-              <Link href="/login" className="hover:text-primary transition-colors">
+              <Link href="/book-demo" className="hover:text-primary transition-colors">
                 Book a Demo
               </Link>
             </li>
