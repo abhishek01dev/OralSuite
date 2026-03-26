@@ -15,6 +15,7 @@ import { chartingRoutes } from '@modules/charting/index.js';
 import { billingRoutes } from '@modules/billing/index.js';
 import { inventoryRoutes } from '@modules/inventory/index.js';
 import { dashboardRoutes } from '@modules/dashboard/index.js';
+import { demoRequestRoutes } from '@modules/demo-requests/index.js';
 
 async function v1Routes(app: FastifyInstance): Promise<void> {
   await app.register(authRoutes);
@@ -33,6 +34,7 @@ async function v1Routes(app: FastifyInstance): Promise<void> {
   await app.register(billingRoutes, { prefix: '/billing' });
   await app.register(inventoryRoutes, { prefix: '/inventory' });
   await app.register(dashboardRoutes, { prefix: '/dashboard' });
+  await app.register(demoRequestRoutes, { prefix: '/demo-requests' });
 }
 
 export async function registerRoutes(app: FastifyInstance): Promise<void> {
