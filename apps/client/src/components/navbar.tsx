@@ -16,23 +16,19 @@ export const Navbar = () => {
         {/* Logo */}
         <Link
           href="/"
-          className="flex items-center gap-2 text-xl font-bold tracking-tight text-(--color-primary)"
+          className="flex items-center gap-3 text-2xl font-black tracking-tight text-primary font-headline"
         >
-          <svg
-            width="28"
-            height="28"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
-            <line x1="3" y1="6" x2="21" y2="6" />
-            <path d="M16 10a4 4 0 01-8 0" />
+          <svg width="32" height="32" viewBox="0 0 256 256" className="rounded-lg shadow-sm">
+            <rect width="256" height="256" rx="64" fill="currentColor" />
+            <path
+              d="M128 60 C88 60 56 80 56 124 C56 160 81 210 100 210 C116 210 128 170 128 170 C128 170 140 210 156 210 C175 210 200 160 200 124 C200 80 168 60 128 60 Z"
+              fill="#ffffff"
+            />
+            <circle cx="128" cy="110" r="14" fill="currentColor" />
           </svg>
-          <span>Store</span>
+          <span className="bg-gradient-to-r from-primary to-tertiary bg-clip-text text-transparent">
+            DentFlow
+          </span>
         </Link>
 
         {/* Desktop nav */}
