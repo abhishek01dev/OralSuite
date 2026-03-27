@@ -45,8 +45,8 @@ export const useAuthStore = create<AuthState>((set) => ({
       };
     }>('/auth/login', { email, password });
 
-    localStorage.setItem('accessToken', res.data.tokens.accessToken);
-    localStorage.setItem('refreshToken', res.data.tokens.refreshToken);
+    sessionStorage.setItem('accessToken', res.data.tokens.accessToken);
+    sessionStorage.setItem('refreshToken', res.data.tokens.refreshToken);
 
     if (res.data.user.tenantId) {
       api.setTenantId(res.data.user.tenantId);
@@ -67,8 +67,8 @@ export const useAuthStore = create<AuthState>((set) => ({
       data: { user: User; tokens: { accessToken: string; refreshToken: string } };
     }>('/auth/register', data);
 
-    localStorage.setItem('accessToken', res.data.tokens.accessToken);
-    localStorage.setItem('refreshToken', res.data.tokens.refreshToken);
+    sessionStorage.setItem('accessToken', res.data.tokens.accessToken);
+    sessionStorage.setItem('refreshToken', res.data.tokens.refreshToken);
     if (res.data.user.tenantId) {
       api.setTenantId(res.data.user.tenantId);
     }
@@ -80,16 +80,16 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   logout: () => {
-    const refreshToken = localStorage.getItem('refreshToken');
+    const refreshToken = sessionStorage.getItem('refreshToken');
     api.post('/auth/logout', { refreshToken }).catch(() => {});
 
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
+    sessionStorage.removeItem('accessToken');
+    sessionStorage.removeItem('refreshToken');
     set({ user: null, isAuthenticated: false, isLoading: false });
   },
 
   fetchUser: async () => {
-    const token = localStorage.getItem('accessToken');
+    const token = sessionStorage.getItem('accessToken');
     if (!token) {
       useCartStore.getState().loadCart();
       set({ isLoading: false });
@@ -103,7 +103,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       set({ user: me.data, isAuthenticated: true, isLoading: false });
       useCartStore.getState().loadCart();
     } catch {
-      localStorage.removeItem('accessToken');
+      sessionStorage.removeItem('accessToken');
       useCartStore.getState().loadCart();
       set({ user: null, isAuthenticated: false, isLoading: false });
     }

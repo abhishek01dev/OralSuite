@@ -11,6 +11,7 @@ interface FetchOptions extends RequestInit {
 export class ApiClient {
   private baseUrl: string;
   private tenantId: string | null = null;
+  private tokenGetter?: () => string | null;
 
   constructor(baseUrl: string) {
     this.baseUrl = baseUrl;
@@ -46,7 +47,12 @@ export class ApiClient {
     return this.tenantId;
   }
 
+  setTokenGetter(getter: () => string | null) {
+    this.tokenGetter = getter;
+  }
+
   private getToken(): string | null {
+    if (this.tokenGetter) return this.tokenGetter();
     if (typeof window === 'undefined') return null;
     return localStorage.getItem('accessToken');
   }

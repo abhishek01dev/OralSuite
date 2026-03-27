@@ -1,13 +1,36 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { ClientSidebar } from '@/components/client-sidebar';
+import { useAuthStore } from '@/lib/auth-store';
 
 export default function ClientDashboardLayout({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const router = useRouter();
+  const { user, logout, isLoading } = useAuthStore();
+  const profileRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const saved = localStorage.getItem('client-sidebar-collapsed');
     if (saved !== null) setCollapsed(JSON.parse(saved));
+  }, []);
+
+  useEffect(() => {
+    const token = sessionStorage.getItem('accessToken');
+    if (!token && !isLoading) {
+      router.push('/login');
+    }
+  }, [isLoading, router]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+        setIsProfileOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const handleToggle = () => {
@@ -15,6 +38,11 @@ export default function ClientDashboardLayout({ children }: { children: React.Re
       localStorage.setItem('client-sidebar-collapsed', JSON.stringify(!prev));
       return !prev;
     });
+  };
+
+  const handleLogout = () => {
+    logout();
+    router.push('/login');
   };
 
   return (
@@ -55,14 +83,36 @@ export default function ClientDashboardLayout({ children }: { children: React.Re
                 <span className="material-symbols-outlined">auto_awesome</span>
               </button>
             </div>
-            <div className="flex items-center gap-3 pl-6 border-l border-slate-100">
-              <div className="text-right">
-                <p className="text-sm font-bold text-on-surface">Dr. Julian Vance</p>
-                <p className="text-[10px] text-on-surface-variant">Chief Surgeon</p>
+            <div
+              className="flex items-center gap-3 pl-6 border-l border-slate-100 relative"
+              ref={profileRef}
+            >
+              <div
+                className="flex items-center gap-3 cursor-pointer select-none"
+                onClick={() => setIsProfileOpen(!isProfileOpen)}
+              >
+                <div className="text-right">
+                  <p className="text-sm font-bold text-on-surface">
+                    {user ? `${user.firstName} ${user.lastName}` : 'Dr. Julian Vance'}
+                  </p>
+                  <p className="text-[10px] text-on-surface-variant">Chief Surgeon</p>
+                </div>
+                <div className="w-10 h-10 rounded-full border-2 border-primary-container bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">
+                  {user ? `${user.firstName[0]}${user.lastName[0]}`.toUpperCase() : 'JV'}
+                </div>
               </div>
-              <div className="w-10 h-10 rounded-full border-2 border-primary-container bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">
-                JV
-              </div>
+
+              {isProfileOpen && (
+                <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-slate-100 py-2 z-50">
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-4 py-2 text-sm text-error hover:bg-error/10 transition-colors flex items-center gap-2 cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined text-sm">logout</span>
+                    Logout
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </header>
