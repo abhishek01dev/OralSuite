@@ -63,3 +63,7 @@ docs/
 .turbo.json
 .cursor/
 .agents/
+
+# claude code personal config
+CLAUDE.local.md
+.claude/settings.local.json
